@@ -1,0 +1,14 @@
+{% extends "lfhazard/base.html" %}
+
+{% block app_navigation_items %}
+  <li><a href="{% url 'lfhazard:documentation' %}">Documentation</a></li>
+{% endblock %}
+
+{% block app_content %}
+  <h1>Welcom to the Liquefaction Hazard App!</h1>
+  <p>Click on 'Go To Map' below to start the lookup process, or see our documentation from the link on the left.</p>
+{% endblock %}
+
+{% block app_actions %}
+  <a href="{% url 'lfhazard:map' %}" class="btn btn-default">Go To Map</a>
+{% endblock %}
