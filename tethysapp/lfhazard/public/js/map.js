@@ -169,6 +169,8 @@ function getPopup(coordinate) {
   $.getJSON(url_LT_Nreq, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
   content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_LS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
+  test = Math.log(test);
+  console.log("LOg of 4 is " + Math.log(4));
   content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(4)) + '</i></p>'});
   $.getJSON(url_SSD_RandS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
   content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
@@ -294,7 +296,7 @@ $( document ).ready(function() {
   LS = new ol.layer.Tile({
     visible: false,
     source: new ol.source.TileWMS({
-      url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+      url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
       params: {'FORMAT': format, 
                'VERSION': '1.1.1',
                tiled: true,
@@ -307,7 +309,7 @@ $( document ).ready(function() {
   LT_Nreq = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
@@ -320,7 +322,7 @@ $( document ).ready(function() {
   LT_CSR = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
@@ -333,7 +335,7 @@ $( document ).ready(function() {
   SSD_Cetin = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
@@ -346,7 +348,7 @@ $( document ).ready(function() {
   SSD_IY = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
@@ -359,7 +361,7 @@ $( document ).ready(function() {
   SSD_RandS = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
@@ -372,7 +374,7 @@ $( document ).ready(function() {
   SSD_BandT = new ol.layer.Tile({
           visible: false,
           source: new ol.source.TileWMS({
-            url: 'http://127.0.0.1:8181/geoserver/lfhazard/wms',
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
             params: {'FORMAT': format, 
                      'VERSION': '1.1.1',
                      tiled: true,
