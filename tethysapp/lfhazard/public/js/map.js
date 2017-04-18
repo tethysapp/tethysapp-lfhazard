@@ -13,57 +13,71 @@ var overlay;
 var container = document.getElementById('popup');
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
+var myState;
+var states;
+var state_extent = {
+  "Utah": [-12696318.964051722, 4438824.352878017, -12138396.254597204, 5161215.111001225],
+  "Alaska": [-21368124.13117759,6457400.14953169,-14010601.536559664,11310234.20130096],
+  "Idaho": [-13051435.550005142, 5159191.507771076, -12361314.3189422, 6275056.926533954],
+  "Montana": [-12918628.795493595, 5521047.083236762, -11581585.046900151, 6275098.365819148],
+  "Oregon": [-13865115.895666974, 5159751.14213368, -12964659.45666714, 5823885.541506248],
+  "South Carolina": [-9278840.450458946, 3767854.0832061665, -8743154.087620595, 4193193.0101464884],
+  "Connecticut": [-8207338.524260876, 5010155.8629135955, -7991291.70537736, 5168561.425406045]
+};
 
 
-function parseResponse_LT_CSR(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+// function parseResponse_LT_CSR(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_LT_Nreq(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_LT_Nreq(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_LS(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_LS(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_SSD_RandS(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_SSD_RandS(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_SSD_BandT(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_SSD_BandT(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_SSD_Cetin(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_SSD_Cetin(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
-  function parseResponse_SSD_IY(json){
-    console.log(json);
-    // parse the json obj and display the value here
-    var test = json.features[0].properties.GRAY_INDEX.toString();
-    content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
-  }
+//   function parseResponse_SSD_IY(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
 
+// ************************************
+// This function corrects 
+// ************************************
 function submitButton() {
   var lat = document.getElementById('lat-input').value;
   var lon = document.getElementById('lon-input').value;
@@ -71,6 +85,7 @@ function submitButton() {
 
   var coordinate = [Number(lat), Number(lon)];
   console.log("Submit click 1: " + coordinate);
+  console.log("Type of coordinate: "+ typeof coordiante);
 
   var newcoor = ol.proj.transform([Number(lat), Number(lon)], 'EPSG:4326','EPSG:3857');
   console.log("Submit click 2: " + newcoor); //This changes lat and long into EPSG:3857
@@ -78,15 +93,22 @@ function submitButton() {
   getPopup(newcoor);
   }
 
-
+// ************************************
+// This makes the pup with all the information
+// ************************************
 function getPopup(coordinate) {
   var view = map.getView();
   var viewResolution = view.getResolution();
 
-  var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
-    coordinate, 'EPSG:3857', 'EPSG:4326'));
+  // var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
+  //   coordinate, 'EPSG:3857', 'EPSG:4326'));
+  
+  var dec = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+  var declon = parseFloat(dec[0]).toFixed(5);
+  var declat = parseFloat(dec[1]).toFixed(5);
 
-  content.innerHTML = '<p><b>Location:</b><br>'+ hdms + '</p>';
+  // content.innerHTML = '<p><b>Location:</b><br>'+ hdms + '</p>';
+  content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
 
 
   var source_LS = LS.getSource();
@@ -99,7 +121,7 @@ function getPopup(coordinate) {
 
   var url_LS = source_LS.getGetFeatureInfoUrl(
     coordinate, viewResolution, view.getProjection(),
-    {'INFO_FORMAT': 'text/javascript', 'FEATURE_COUNT': 50});
+    {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
   url_LS = url_LS + "&format_options=callback:parseResponse_LS"
   console.log(url_LS);
 
@@ -143,19 +165,19 @@ function getPopup(coordinate) {
 
 
   $.getJSON(url_LT_CSR, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_LT_Nreq, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_LS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(4)) + '</i></p>'});
   $.getJSON(url_SSD_RandS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_SSD_BandT, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_SSD_Cetin, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
   $.getJSON(url_SSD_IY, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>'});
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
 
 // change my_url to your variable that contains the real url
   // $.ajax({
@@ -199,6 +221,9 @@ function getPopup(coordinate) {
 }
 
 $( document ).ready(function() {
+  var returnPeriod = document.getElementById('select_returnPeriod').value;
+  var state = document.getElementById('select_state').value;
+  var modelYear = document.getElementById('select_modelYear').value;
   /**
    * Create an overlay to anchor the popup to the map.
    */
@@ -225,15 +250,37 @@ $( document ).ready(function() {
   /**
    * Create the map.
    */
-  map = new ol.Map({
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.TileJSON({
-          url: 'https://api.tiles.mapbox.com/v3/mapbox.natural-earth-hypso-bathy.json?secure',
-          crossOrigin: 'anonymous'
+
+  var basemap = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+
+  states = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          url: '/static/lfhazard/kml/' + state + '.kml',
+          format: new ol.format.KML()
         })
-      }),
-    ],
+      });
+
+  $('#userFrom').change(function(){
+  map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
+  var state = document.getElementById('select_state').value;
+  console.log("state selected:    " + state);
+  states = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        url: '/static/lfhazard/kml/' + state + '.kml',
+        format: new ol.format.KML()
+      })
+    });
+  map.addLayer(states);
+  map.updateSize();
+  myState = map.getLayers().item(1).getSource().getExtent();
+  var ex = states.getSource().getExtent()
+  map.getView().fit(state_extent[state], map.getSize());
+  });
+
+  map = new ol.Map({
+    layers: [basemap,states],
     overlays: [overlay],
     target: 'map',
     view: new ol.View({
@@ -243,10 +290,6 @@ $( document ).ready(function() {
   });
 
   var format = 'image/png';
-
-  var returnPeriod = document.getElementById('select_returnPeriod').value;
-  var state = document.getElementById('select_state').value;
-  var modelYear = document.getElementById('select_modelYear').value;
 
   LS = new ol.layer.Tile({
     visible: false,

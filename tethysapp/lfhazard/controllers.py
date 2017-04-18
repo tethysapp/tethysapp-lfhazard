@@ -39,10 +39,10 @@ def map(request):
                             options=[('Utah', 'Utah'), ('Alaska', 'Alaska'), ('Idaho', 'Idaho'), ('Montana', 'Montana'), ('Oregon', 'Oregon'), ('South Carolina', 'South Carolina'), ('Connecticut', 'Connecticut'),],
                             initial=['Utah', 'Utah'])
 
-    text_input_lat = TextInput(display_text='Latitude',
+    text_input_lat = TextInput(display_text='Longitude',
                                    name='lat-input')
 
-    text_input_lon = TextInput(display_text='Longitude',
+    text_input_lon = TextInput(display_text='Latitude',
                                    name='lon-input')
 
     select_modelYear = SelectInput(display_text='Model Year:',
