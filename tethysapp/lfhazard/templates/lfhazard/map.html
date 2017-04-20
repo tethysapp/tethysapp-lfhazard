@@ -5,16 +5,20 @@
 {% load tethys_gizmos %}
 
 {% block app_navigation_items %}
-  <form id="userFrom">
+  <form id="Stateform">
       {% csrf_token %}
       {% gizmo select_input select_state %}
+  </form>
+  <form id="ModelYearform">
+      {% gizmo select_input select_modelYear %}
+  </form>
+  <form id="ReturnPeriodform">
+      {% gizmo select_input select_returnPeriod %}
+  </form>
       {% gizmo text_input text_input_lat %} 
       {% gizmo text_input text_input_lon %}
-      {% gizmo select_input select_modelYear %}
-      {% gizmo select_input select_returnPeriod %}
       <input type="button" onclick="submitButton();" name="name-form-submit" class="btn btn-default" value="Submit">
 
-  </form>
 
   {% if lat and lon %}
     <h1>State: {{ state }}</h1>

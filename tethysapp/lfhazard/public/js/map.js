@@ -75,8 +75,108 @@ var state_extent = {
 //     content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
 //   }
 
+function update() {
+  console.log("hello");
+  var returnPeriod = document.getElementById('select_returnPeriod').value;
+  var state = document.getElementById('select_state').value;
+  var modelYear = document.getElementById('select_modelYear').value;
+
+   var format = 'image/png';
+
+  LS = new ol.layer.Tile({
+    visible: false,
+    source: new ol.source.TileWMS({
+      url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+      params: {'FORMAT': format, 
+               'VERSION': '1.1.1',
+               tiled: true,
+            LAYERS: 'lfhazard:Kriging_LS-' + returnPeriod + '_' + state + modelYear,
+            STYLES: '',
+      }
+    })
+  });
+
+  LT_Nreq = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'lfhazard:Kriging_LT-' + returnPeriod + '_' + state + '_PB_Nreq_Cetin' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+
+  LT_CSR = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'lfhazard:Kriging_LT-' + returnPeriod + '_' + state + '_PB_CSR_' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+
+  SSD_Cetin = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_Cetin_percent' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+
+  SSD_IY = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_IandY_percent' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+
+  SSD_RandS = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_PB_Seismic_Slope_Disp_RandS' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+
+  SSD_BandT = new ol.layer.Tile({
+          visible: false,
+          source: new ol.source.TileWMS({
+            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
+            params: {'FORMAT': format, 
+                     'VERSION': '1.1.1',
+                     tiled: true,
+                  LAYERS: 'Kriging_SSD-' + returnPeriod + '_' + state + '_PB_Seismic_Slope_Disp_BandT' + modelYear,
+                  STYLES: '',
+            }
+          })
+        });
+}
+
 // ************************************
-// This function corrects 
+// This function is the button 
 // ************************************
 function submitButton() {
   var lat = document.getElementById('lat-input').value;
@@ -97,6 +197,7 @@ function submitButton() {
 // This makes the pup with all the information
 // ************************************
 function getPopup(coordinate) {
+  update();
   var view = map.getView();
   var viewResolution = view.getResolution();
 
@@ -226,6 +327,7 @@ $( document ).ready(function() {
   var returnPeriod = document.getElementById('select_returnPeriod').value;
   var state = document.getElementById('select_state').value;
   var modelYear = document.getElementById('select_modelYear').value;
+  var onclickcoor;
   /**
    * Create an overlay to anchor the popup to the map.
    */
@@ -264,7 +366,7 @@ $( document ).ready(function() {
         })
       });
 
-  $('#userFrom').change(function(){
+  $('#Stateform').change(function(){
   map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
   var state = document.getElementById('select_state').value;
   console.log("state selected:    " + state);
@@ -276,9 +378,20 @@ $( document ).ready(function() {
     });
   map.addLayer(states);
   map.updateSize();
+  update();
   myState = map.getLayers().item(1).getSource().getExtent();
   var ex = states.getSource().getExtent()
   map.getView().fit(state_extent[state], map.getSize());
+  });
+
+  $('#ModelYearform').change(function(){
+    console.log('Model Year changed');
+    getPopup(onclickcoor);
+  });
+
+  $('#ReturnPeriodform').change(function(){
+    console.log('Return Period changed');
+    getPopup(onclickcoor);
   });
 
   map = new ol.Map({
@@ -291,104 +404,11 @@ $( document ).ready(function() {
     })
   });
 
-  var format = 'image/png';
-
-  LS = new ol.layer.Tile({
-    visible: false,
-    source: new ol.source.TileWMS({
-      url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-      params: {'FORMAT': format, 
-               'VERSION': '1.1.1',
-               tiled: true,
-            LAYERS: 'lfhazard:Kriging_LS-' + returnPeriod + '_' + state + modelYear,
-            STYLES: '',
-      }
-    })
-  });
-
-  LT_Nreq = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'lfhazard:Kriging_LT-' + returnPeriod + '_' + state + '_PB_Nreq_Cetin' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
-  LT_CSR = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'lfhazard:Kriging_LT-' + returnPeriod + '_' + state + '_PB_CSR_' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
-  SSD_Cetin = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_Cetin_percent' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
-  SSD_IY = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_IandY_percent' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
-  SSD_RandS = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'lfhazard:Kriging_SSD-' + returnPeriod + '_' + state + '_PB_Seismic_Slope_Disp_RandS' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
-  SSD_BandT = new ol.layer.Tile({
-          visible: false,
-          source: new ol.source.TileWMS({
-            url: 'http://tethys.byu.edu:8181/geoserver/lfhazard/wms',
-            params: {'FORMAT': format, 
-                     'VERSION': '1.1.1',
-                     tiled: true,
-                  LAYERS: 'Kriging_SSD-' + returnPeriod + '_' + state + '_PB_Seismic_Slope_Disp_BandT' + modelYear,
-                  STYLES: '',
-            }
-          })
-        });
-
   map.on('singleclick', function(evt) {
     if (returnPeriod != "" && state != "" && modelYear != "") {
-      var coordinate = evt.coordinate;
-      console.log("On click: " + coordinate);
-      getPopup(coordinate);
+      onclickcoor = evt.coordinate;
+      console.log("On click: " + onclickcoor);
+      getPopup(onclickcoor);
     }
     else {
       alert("No parameters provided");
