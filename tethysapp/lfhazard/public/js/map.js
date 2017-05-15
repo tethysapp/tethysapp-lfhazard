@@ -24,6 +24,13 @@ var state_extent = {
   "South Carolina": [-9278840.450458946, 3767854.0832061665, -8743154.087620595, 4193193.0101464884],
   "Connecticut": [-8207338.524260876, 5010155.8629135955, -7991291.70537736, 5168561.425406045]
 };
+var CSRvalue;
+var Nvalue;
+var LogDvalue;
+var RnSvalue;
+var BnTvalue;
+var Cetinvalue;
+var InYvalue;
 
 
 // function parseResponse_LT_CSR(json){
@@ -265,22 +272,22 @@ function getPopup(coordinate) {
   var SSD_BandTs = "SSD_BandT";
 
 
-  $.getJSON(url_LT_CSR, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
-  $.getJSON(url_LT_Nreq, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
-  $.getJSON(url_LS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  test = Math.log(test);
+  $.getJSON(url_LT_CSR, function(data) {CSRvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  $.getJSON(url_LT_Nreq, function(data) {Nvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  $.getJSON(url_LS, function(data) {var LogDvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  LogDvalue = Math.log(LogDvalue);
   console.log("LOg of 4 is " + Math.log(4));
-  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(4)) + '</i></p>'});
-  $.getJSON(url_SSD_RandS, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
-  $.getJSON(url_SSD_BandT, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
-  $.getJSON(url_SSD_Cetin, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
-  $.getJSON(url_SSD_IY, function(data) {var test = data.features[0].properties.GRAY_INDEX.toString();
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(test).toFixed(2)) + '</i></p>'});
+  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  $.getJSON(url_SSD_RandS, function(data) {RnSvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  $.getJSON(url_SSD_BandT, function(data) {BnTvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  $.getJSON(url_SSD_Cetin, function(data) {Cetinvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  $.getJSON(url_SSD_IY, function(data) {InYvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
 
 // change my_url to your variable that contains the real url
   // $.ajax({
