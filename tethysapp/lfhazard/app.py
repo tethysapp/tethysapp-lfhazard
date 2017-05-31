@@ -33,7 +33,10 @@ class LiquifactionHazardApp(TethysAppBase):
                            controller='lfhazard.controllers.map'),
                     UrlMap(name='documentation',
                            url='lfhazard/documentation',
-                           controller='lfhazard.controllers.documentation')
+                           controller='lfhazard.controllers.documentation'),
+                     UrlMap(name='query_csv',
+                           url='lfhazard/query-csv',
+                           controller='lfhazard.controllers.query_csv')
         )
 
         return url_maps

@@ -31,6 +31,9 @@ var RnSvalue;
 var BnTvalue;
 var Cetinvalue;
 var InYvalue;
+var returnPeriod_global;
+var state_global;
+var modelYear_global;
 
 
 // function parseResponse_LT_CSR(json){
@@ -87,6 +90,9 @@ function update() {
   var returnPeriod = document.getElementById('select_returnPeriod').value;
   var state = document.getElementById('select_state').value;
   var modelYear = document.getElementById('select_modelYear').value;
+  returnPeriod_global = returnPeriod;
+  state_global = state;
+  modelYear_global = modelYear;
 
    var format = 'image/png';
 
@@ -215,9 +221,14 @@ function getPopup(coordinate) {
   var declon = parseFloat(dec[0]).toFixed(5);
   var declat = parseFloat(dec[1]).toFixed(5);
 
+  query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
+
+
+
   // content.innerHTML = '<p><b>Location:</b><br>'+ hdms + '</p>';
   content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
 
+  //*********************************************
 
   var source_LS = LS.getSource();
   var source_LT_Nreq = LT_Nreq.getSource();
@@ -273,22 +284,36 @@ function getPopup(coordinate) {
 
 
   $.getJSON(url_LT_CSR, function(data) {CSRvalue = data.features[0].properties.GRAY_INDEX.toString()});
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  console.log("CSR value: "+CSRvalue);
+  // content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
   $.getJSON(url_LT_Nreq, function(data) {Nvalue = data.features[0].properties.GRAY_INDEX.toString()});
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
   $.getJSON(url_LS, function(data) {var LogDvalue = data.features[0].properties.GRAY_INDEX.toString()});
-  LogDvalue = Math.log(LogDvalue);
-  console.log("LOg of 4 is " + Math.log(4));
-  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  // LogDvalue = Math.log(LogDvalue);
+  // console.log("LOg of 4 is " + Math.log(4));
+  // content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
   $.getJSON(url_SSD_RandS, function(data) {RnSvalue = data.features[0].properties.GRAY_INDEX.toString()});
-  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
   $.getJSON(url_SSD_BandT, function(data) {BnTvalue = data.features[0].properties.GRAY_INDEX.toString()});
   content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
   $.getJSON(url_SSD_Cetin, function(data) {Cetinvalue = data.features[0].properties.GRAY_INDEX.toString()});
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
   $.getJSON(url_SSD_IY, function(data) {InYvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
+
+  // This part adds to the popup
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  LogDvalue = Math.log(LogDvalue);
+  console.log("LOg of 4 is " + Math.log(4));
+  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
 
+  //*********************************************
+  
 // change my_url to your variable that contains the real url
   // $.ajax({
   //   url: url_LT_CSR, // change this line
@@ -330,11 +355,75 @@ function getPopup(coordinate) {
 
 }
 
+function display_popup(point_value)
+{
+  alert(point_value);
+}
+
+function query_csv(lon, lat, year, state, returnPeriod)
+{
+
+  var csrf_token = getCookie('csrftoken');
+  
+  var data = {lon: lon, lat: lat, year: year, state: state, returnPeriod: returnPeriod};
+  $.ajax({
+        type: 'POST',
+        url: '/apps/lfhazard/query-csv/',
+        headers: {'X-CSRFToken': csrf_token},
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function (data) 
+        {            
+            if (data.status == "success")
+            {
+                
+                 var point_value = data.point_value;
+                 display_popup(point_value);
+
+
+
+
+            }
+            else
+            {
+                alert("value error");
+               
+            }
+           
+        },
+        error: function (jqXHR, textStatus, errorThrown) 
+        {
+
+           alert("ajax error");
+           
+        }
+    });
+}
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 $( document ).ready(function() {
   var returnPeriod = document.getElementById('select_returnPeriod').value;
   var state = document.getElementById('select_state').value;
   var modelYear = document.getElementById('select_modelYear').value;
   var onclickcoor;
+
   /**
    * Create an overlay to anchor the popup to the map.
    */
