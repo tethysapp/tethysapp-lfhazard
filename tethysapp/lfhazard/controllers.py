@@ -99,14 +99,24 @@ def documentation(request):
 def query_csv(request):
   result = {}
   number_line = 1
-  dist1 = 1000
-  quad1_line_tracker=[]
+  dist11 = 10000
+  dist12 = 10000
+  dist21 = 10000
+  dist22 = 10000
+  # dist will contain all the closests distances from the coordinate put in
+  # quad_line_tracker will contain the values of the point closest to the
+  # cooridnates put in
+  # Quadrant 1: dist [0,1]
+  # Quadrant 2: dist [2,3]
+  # Quadrant 3: dist [4,5]
+  # Quadrant 4: dist [6,7]
+  dist = [10000,10000,10000,10000,10000,10000,10000,10000]
+  quad_line_tracker=[0,0,0,0,0,0,0,0]
   try:
     if request.method == 'POST':
       request_dict = json.loads(request.body)
 
       # These are all the values from the javascript
-      print "This is the Dist1: " + str(dist1)
       print request_dict 
       lon = float(request_dict['lon'])
       lat = float(request_dict['lat'])
@@ -130,46 +140,101 @@ def query_csv(request):
         next(row) # this skips the first line
         for line in row:
           line = line.rstrip().split(',')
-          #Quadrant One
-          # print "*********"
-          # print "This is the Dist1: " + str(dist1)
-          # print type(dist1)
 
-          # print line
-
+          # This sets up the lat and lon read from csv file
           temp_lon = float(line[0])
           temp_lat = float(line[1])
-          # print "*********"
-
-          # print type(lon)
-          # print type(lat)
-          # print type(temp_lon)
-          # print type(temp_lat)
-          # print line[0] + '>'+ lon +' '+ line[1] +'>'+ lat
-          # print str(lon) + ' ' + str(lat)
-          # print str(temp_lon) + ' ' + str(temp_lat)
-          # print number_line
-          # print abs(lon-temp_lon)
-          # print abs(lat-temp_lat)
-         
-          if temp_lon > lon and temp_lat > lat:
+          
+          # This tests for Quadrant one
+          if temp_lon >= lon and temp_lat >= lat:
             
-            dist1 = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
-            # print "point 2 "
-            # print dist1
-            if dist1 < dist1:
-              print "point 3"
-              dist1 = dist1
-              print "point 3"
-              quad1_line_tracker.append(line[0])
-              print "point 4"
-      
-          number_line += 1
-        
-        print "Number of lines: " + str(number_line)
-        print "This is the distance: "+str(dist1)
-        print "This is the line: "+str(quad1_line_tracker)
+            # This calculates the distance between two points
+            temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+            
+            # This tests for the distance of point and sorts. 
+            # This will store 2 points close to the coordinates.
+            if temp_dist <= dist[1]:
+              dist[1] = temp_dist
+              quad_line_tracker[1] = line
+            if (temp_dist <= dist[0] and temp_dist <= dist[1]):
+              dist[1]= dist[0]
+              dist[0] = temp_dist
+              quad_line_tracker[1] = quad_line_tracker[0]
+              quad_line_tracker[0] = line
 
+          # This test for Quadrant two
+          if temp_lon <= lon and temp_lat >= lat:
+            
+            # This calculates the distance between two points
+            temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+            
+            # This tests for the distance of point and sorts. 
+            # This will store 2 points close to the coordinates.
+            if temp_dist <= dist[3]:
+              dist[3] = temp_dist
+              quad_line_tracker[3] = line
+            if (temp_dist <= dist[2] and temp_dist <= dist[3]):
+              dist[3]= dist[2]
+              dist[2] = temp_dist
+              quad_line_tracker[3] = quad_line_tracker[2]
+              quad_line_tracker[2] = line
+
+          # This test for Quadrant three
+          if temp_lon <= lon and temp_lat <= lat:
+            
+            # This calculates the distance between two points
+            temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+            
+            # This tests for the distance of point and sorts. 
+            # This will store 2 points close to the coordinates.
+            if temp_dist <= dist[5]:
+              dist[5] = temp_dist
+              quad_line_tracker[5] = line
+            if (temp_dist <= dist[4] and temp_dist <= dist[5]):
+              dist[5]= dist[4]
+              dist[4] = temp_dist
+              quad_line_tracker[5] = quad_line_tracker[4]
+              quad_line_tracker[4] = line
+
+              # This test for Quadrant four
+          if temp_lon >= lon and temp_lat <= lat:
+            
+            # This calculates the distance between two points
+            temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+            
+            # This tests for the distance of point and sorts. 
+            # This will store 2 points close to the coordinates.
+            if temp_dist <= dist[7]:
+              dist[7] = temp_dist
+              quad_line_tracker[7] = line
+            if (temp_dist <= dist[6] and temp_dist <= dist[7]):
+              dist[7]= dist[6]
+              dist[6] = temp_dist
+              quad_line_tracker[7] = quad_line_tracker[6]
+              quad_line_tracker[6] = line
+          
+        print "This is the 1st Quadrant"
+        print " This is the 1st distance: "+str(dist[0])
+        print " This is the 2nd distance: "+str(dist[1])
+        print " This is the 1st line: "+str(quad_line_tracker[0])
+        print " This is the 2nd line: "+str(quad_line_tracker[1])
+        print "This is the 2nd Quadrant"
+        print " This is the 1st distance: "+str(dist[2])
+        print " This is the 2nd distance: "+str(dist[3])
+        print " This is the 1st line: "+str(quad_line_tracker[2])
+        print " This is the 2nd line: "+str(quad_line_tracker[3])
+        print "This is the 3rd Quadrant"
+        print " This is the 1st distance: "+str(dist[4])
+        print " This is the 2nd distance: "+str(dist[5])
+        print " This is the 1st line: "+str(quad_line_tracker[4])
+        print " This is the 2nd line: "+str(quad_line_tracker[5])
+        print "This is the 4th Quadrant"
+        print " This is the 1st distance: "+str(dist[6])
+        print " This is the 2nd distance: "+str(dist[7])
+        print " This is the 1st line: "+str(quad_line_tracker[6])
+        print " This is the 2nd line: "+str(quad_line_tracker[7])
+
+        
 
 
 
