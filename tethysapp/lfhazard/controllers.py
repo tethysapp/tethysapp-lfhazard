@@ -98,45 +98,50 @@ def documentation(request):
 
 def query_csv(request):
   result = {}
-  number_line = 1
   dist11 = 10000
   dist12 = 10000
   dist21 = 10000
   dist22 = 10000
-  # dist will contain all the closests distances from the coordinate put in
-  # quad_line_tracker will contain the values of the point closest to the
-  # cooridnates put in
+  # dist will contain all the closests distances from the coordinate put in.
   # Quadrant 1: dist [0,1]
   # Quadrant 2: dist [2,3]
   # Quadrant 3: dist [4,5]
   # Quadrant 4: dist [6,7]
   dist = [10000,10000,10000,10000,10000,10000,10000,10000]
+  # quad_line_tracker will contain the values of the point closest to the
+  # cooridnates put in.
   quad_line_tracker=[0,0,0,0,0,0,0,0]
+  # point_value will contain the calculated variables that will be 
+  # brought to the js file.
+  point_value = [100, 101, 102]
   try:
     if request.method == 'POST':
       request_dict = json.loads(request.body)
 
       # These are all the values from the javascript
+
       print request_dict 
       lon = float(request_dict['lon'])
       lat = float(request_dict['lat'])
       year = request_dict['year']
       state = request_dict['state']
       returnPeriod = request_dict['returnPeriod']
-
+      
       # this finds the correct csv files given the parameters
 
       # path extentions
       LS_path = "LS-" + returnPeriod + '_States/LS-' + returnPeriod + '_' + state + '.csv'
       LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
-
+      
       csv_base_path = '/home/tethys/tethysdev/csv/'
       # "LS-475_States/LS-475_Alaska.csv"
 
       # LS path first
       csv_file_path = csv_base_path + LS_path
+      
       with open(csv_file_path, 'r') as row:
+
         next(row) # this skips the first line
         for line in row:
           line = line.rstrip().split(',')
@@ -241,7 +246,7 @@ def query_csv(request):
 
 
       # write your logic here to get the value at lon, lat
-      point_value = [100, 101, 102]
+      
       result["status"] = "success"
       result["point_value"] = point_value
     else:
