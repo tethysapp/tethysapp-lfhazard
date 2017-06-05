@@ -112,6 +112,8 @@ def query_csv(request):
   # quad_line_tracker will contain the values of the point closest to the
   # cooridnates put in.
   quad_line_tracker=[0,0,0,0,0,0,0,0]
+  # temp_numerator is a temporary variable for calcuations
+  temp_numerator = 1
   # point_value will contain the calculated variables that will be 
   # brought to the js file.
   point_value = [100, 101, 102]
@@ -142,7 +144,6 @@ def query_csv(request):
         csv_file_path = csv_base_path + extension
         print "Now working on: " + extension
         ext = str(extension)
-        print ext
         with open(csv_file_path, 'r') as row:
 
 
@@ -222,32 +223,47 @@ def query_csv(request):
                 quad_line_tracker[7] = quad_line_tracker[6]
                 quad_line_tracker[6] = line
 
-          print "This is the file path: "  
-          print "This is the 1st Quadrant"
-          print " This is the 1st distance: "+str(dist[0])
-          print " This is the 2nd distance: "+str(dist[1])
-          print " This is the 1st line: "+str(quad_line_tracker[0])
-          print " This is the 2nd line: "+str(quad_line_tracker[1])
-          print "This is the 2nd Quadrant"
-          print " This is the 1st distance: "+str(dist[2])
-          print " This is the 2nd distance: "+str(dist[3])
-          print " This is the 1st line: "+str(quad_line_tracker[2])
-          print " This is the 2nd line: "+str(quad_line_tracker[3])
-          print "This is the 3rd Quadrant"
-          print " This is the 1st distance: "+str(dist[4])
-          print " This is the 2nd distance: "+str(dist[5])
-          print " This is the 1st line: "+str(quad_line_tracker[4])
-          print " This is the 2nd line: "+str(quad_line_tracker[5])
-          print "This is the 4th Quadrant"
-          print " This is the 1st distance: "+str(dist[6])
-          print " This is the 2nd distance: "+str(dist[7])
-          print " This is the 1st line: "+str(quad_line_tracker[6])
-          print " This is the 2nd line: "+str(quad_line_tracker[7])
+          # print "This is the file path: "  
+          # print "This is the 1st Quadrant"
+          # print " This is the 1st distance: "+str(dist[0])
+          # print " This is the 2nd distance: "+str(dist[1])
+          # print " This is the 1st line: "+str(quad_line_tracker[0])
+          # print " This is the 2nd line: "+str(quad_line_tracker[1])
+          # print "This is the 2nd Quadrant"
+          # print " This is the 1st distance: "+str(dist[2])
+          # print " This is the 2nd distance: "+str(dist[3])
+          # print " This is the 1st line: "+str(quad_line_tracker[2])
+          # print " This is the 2nd line: "+str(quad_line_tracker[3])
+          # print "This is the 3rd Quadrant"
+          # print " This is the 1st distance: "+str(dist[4])
+          # print " This is the 2nd distance: "+str(dist[5])
+          # print " This is the 1st line: "+str(quad_line_tracker[4])
+          # print " This is the 2nd line: "+str(quad_line_tracker[5])
+          # print "This is the 4th Quadrant"
+          # print " This is the 1st distance: "+str(dist[6])
+          # print " This is the 2nd distance: "+str(dist[7])
+          # print " This is the 1st line: "+str(quad_line_tracker[6])
+          # print " This is the 2nd line: "+str(quad_line_tracker[7])
 
           # This part calculates the values
           print "***********"
           if ext[:2] == "LS":
             print "Working on LS file"
+            i=0
+            temp_numerator = 0
+            temp_denominator = 0
+            LS_Dm_IDW = 0
+            for i in range(4):
+              temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
+              temp_numerator = temp_numerator + temp_numerator_add
+              temp_denominator_add = 1/float(math.pow(dist[i],2))
+              temp_denominator = temp_denominator + temp_denominator_add
+            LS_Dm_IDW = math.log(temp_numerator/temp_denominator)
+            point_value.append(LS_Dm_IDW)
+            print str(temp_numerator)
+            print str(temp_denominator)
+            print "This is the LS Dm IDW: "+str(LS_Dm_IDW)
+            # LS_Dm = 
 
           elif ext[:2] == "LT":
             print "Working on LT file"
