@@ -245,11 +245,11 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
 // ************************************
 function getPopup(coordinate) {
   update();
-  var view = map.getView();
-  var viewResolution = view.getResolution();
+  // var view = map.getView();
+  // var viewResolution = view.getResolution();
 
-  // var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
-  //   coordinate, 'EPSG:3857', 'EPSG:4326'));
+  // // var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(
+  // //   coordinate, 'EPSG:3857', 'EPSG:4326'));
   
   var dec = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
   var declon = parseFloat(dec[0]).toFixed(5);
@@ -258,9 +258,7 @@ function getPopup(coordinate) {
   query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
 
 
-
-  // content.innerHTML = '<p><b>Location:</b><br>'+ hdms + '</p>';
-  content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
+  // content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
 
 // **********************************************************
 // The following section was using tiff files from the geoserver to get the value
@@ -338,15 +336,15 @@ function getPopup(coordinate) {
 // **********************************************************
 
   // Sets the values from value_point into the variables
-  console.log(point_value);
-  // This part adds to the popup
-  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
+  // console.log(point_value);
+  // // This part adds to the popup
+  // content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
 
 // **********************************************************
 // change my_url to your variable that contains the real url
@@ -386,13 +384,8 @@ function getPopup(coordinate) {
   //   jsonpCallback: "parseResponse_SSD_IY" //do not change this line
   // });
 // **********************************************************
-  overlay.setPosition(coordinate);
+  // overlay.setPosition(coordinate);
 
-}
-
-function display_popup(point_value)
-{
-  alert(point_value);
 }
 
 // Function query_csv sends parameters to the controllers.py
@@ -414,12 +407,11 @@ function query_csv(lon, lat, year, state, returnPeriod)
             {
                 
                 point_value = data.point_value;
-                display_popup(point_value);
-                console.log(point_value);
+                // console.log(point_value);
                 // console.log(point_value[0]);
-                console.log("These are the lon and lat: "+ lon + " & "+ lat);
+                // console.log("These are the lon and lat: "+ lon + " & "+ lat);
                 var newcoor = ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326','EPSG:3857');
-                console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
+                // console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
                 newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
 
 
@@ -427,7 +419,7 @@ function query_csv(lon, lat, year, state, returnPeriod)
             }
             else
             {
-                alert("value error");
+                // alert("value error");
                
             }
            
@@ -435,7 +427,7 @@ function query_csv(lon, lat, year, state, returnPeriod)
         error: function (jqXHR, textStatus, errorThrown) 
         {
 
-           alert("ajax error");
+           // alert("ajax error");
            
         }
     });
