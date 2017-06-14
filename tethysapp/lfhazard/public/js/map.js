@@ -207,6 +207,40 @@ function submitButton() {
   }
 
 // ************************************
+// This is the new popup builder
+// ************************************
+function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue) {
+  console.log ("Working on the new popup");
+  console.log (LogDvalue);
+  console.log (CSRvalue);
+  console.log (Nvalue);
+  console.log (RnSvalue);
+  console.log (BnTvalue);
+  console.log (Cetinvalue);
+  console.log (InYvalue);
+
+
+  var view = map.getView();
+  var viewResolution = view.getResolution();
+
+  var dec = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+  var declon = parseFloat(dec[0]).toFixed(5);
+  var declat = parseFloat(dec[1]).toFixed(5);
+  
+
+  content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
+  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
+  overlay.setPosition(coordinate);
+}
+
+
+// ************************************
 // This makes the pup with all the information
 // ************************************
 function getPopup(coordinate) {
@@ -379,9 +413,14 @@ function query_csv(lon, lat, year, state, returnPeriod)
             if (data.status == "success")
             {
                 
-                 point_value = data.point_value;
-                 display_popup(point_value);
-                 console.log(point_value);
+                point_value = data.point_value;
+                display_popup(point_value);
+                console.log(point_value);
+                // console.log(point_value[0]);
+                console.log("These are the lon and lat: "+ lon + " & "+ lat);
+                var newcoor = ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326','EPSG:3857');
+                console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
+                newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
 
 
 
