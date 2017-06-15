@@ -137,8 +137,8 @@ def query_csv(request):
       LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
       path_extension = [LS_path, LT_path, SSD_path]
-      csv_base_path = '/home/tethys/tethysdev/csv/'
-      # csv_base_path = '/lf_hazard/'+year+'/'
+      # csv_base_path = '/home/tethys/tethysdev/csv/' # Local path
+      csv_base_path = '/lf_hazard/'+year+'/' # Server path
      
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
