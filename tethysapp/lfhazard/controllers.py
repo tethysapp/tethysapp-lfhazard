@@ -40,7 +40,7 @@ def map(request):
     select_state = SelectInput(display_text='State:',
                             name='select_state',
                             multiple=False,
-                            options=[('Utah', 'Utah'), ('Alaska', 'Alaska'), ('Idaho', 'Idaho'), ('Montana', 'Montana'), ('Oregon', 'Oregon'), ('South Carolina', 'South_Carolina'), ('Connecticut', 'Connecticut'),],
+                            options=[('Utah', 'Utah'), ('Alaska', 'Alaska'), ('Idaho', 'Idaho'), ('Montana', 'Montana'), ('South Carolina', 'South_Carolina'), ('Connecticut', 'Connecticut'),],
                             initial=['Utah', 'Utah'])
 
     text_input_lat = TextInput(display_text='Longitude',
