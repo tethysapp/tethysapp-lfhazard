@@ -362,6 +362,28 @@ $( document ).ready(function() {
     })
   });
 
+  // here is where it checks if its in the state
+  var select= new ol.interaction.Select({
+          multi: true // multi is used in this example if hitTolerance > 0
+   });
+
+  map.addInteraction(select);
+
+  select.on('select', function(e){
+    var state_clicked = e.target.getFeatures().getArray()[0].getId();
+    console.log("State clickd:");
+    console.log(state_clicked);
+    var state_dropdown = document.getElementById('select_state').value;
+    console.log("State droped:");
+    console.log(state_dropdown);
+    if (state_clicked  != state_dropdown)
+    {
+      alert("Please click in " + state_dropdown);
+    }      
+  });
+  // $$$$$$$$$$$$$
+
+
   map.on('singleclick', function(evt) {
     if (returnPeriod != "" && state != "" && modelYear != "") {
       onclickcoor = evt.coordinate;
