@@ -36,6 +36,55 @@ var state_global;
 var modelYear_global;
 var point_value;
 
+// function parseResponse_LT_CSR(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_LT_Nreq(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_LS(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_SSD_RandS(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_SSD_BandT(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_SSD_Cetin(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
+//   function parseResponse_SSD_IY(json){
+//     console.log(json);
+//     // parse the json obj and display the value here
+//     var test = json.features[0].properties.GRAY_INDEX.toString();
+//     content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + test + '</i></p>';
+//   }
+
 function update() {
   console.log("hello");
   var returnPeriod = document.getElementById('select_returnPeriod').value;
@@ -143,7 +192,6 @@ function update() {
 // This function is the button 
 // ************************************
 function submitButton() {
-  console.log ("submitButton works")
   var lat = document.getElementById('lat-input').value;
   var lon = document.getElementById('lon-input').value;
 
@@ -182,12 +230,12 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
 
   content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
   content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
   overlay.setPosition(coordinate);
 }
 
@@ -197,7 +245,6 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
 // ************************************
 function getPopup(coordinate) {
   update();
-  console.log ("getPopup works")
   // var view = map.getView();
   // var viewResolution = view.getResolution();
 
@@ -213,13 +260,138 @@ function getPopup(coordinate) {
 
   // content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
 
+// **********************************************************
+// The following section was using tiff files from the geoserver to get the value
+
+  // var source_LS = LS.getSource();
+  // var source_LT_Nreq = LT_Nreq.getSource();
+  // var source_LT_CSR = LT_CSR.getSource();
+  // var source_SSD_Cetin = SSD_Cetin.getSource();
+  // var source_SSD_IY = SSD_IY.getSource();
+  // var source_SSD_RandS = SSD_RandS.getSource();
+  // var source_SSD_BandT = SSD_BandT.getSource();
+
+  // var url_LS = source_LS.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_LS = url_LS + "&format_options=callback:parseResponse_LS"
+  // console.log(url_LS);
+
+  // var url_LT_Nreq = source_LT_Nreq.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_LT_Nreq = url_LT_Nreq + "&format_options=callback:parseResponse_LT_Nreq"
+
+  // var url_LT_CSR = source_LT_CSR.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_LT_CSR = url_LT_CSR + "&format_options=callback:parseResponse_LT_CSR"
+
+  // var url_SSD_Cetin = source_SSD_Cetin.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_SSD_Cetin = url_SSD_Cetin + "&format_options=callback:parseResponse_SSD_Cetin"
+
+  // var url_SSD_IY = source_SSD_IY.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_SSD_IY = url_SSD_IY + "&format_options=callback:parseResponse_SSD_IY"
+
+  // var url_SSD_RandS = source_SSD_RandS.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_SSD_RandS = url_SSD_RandS + "&format_options=callback:parseResponse_SSD_RandS"
+  
+  // var url_SSD_BandT = source_SSD_BandT.getGetFeatureInfoUrl(
+  //   coordinate, viewResolution, view.getProjection(),
+  //   {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 50});
+  // url_SSD_BandT = url_SSD_BandT + "&format_options=callback:parseResponse_SSD_BandT"
+
+  // var LSs = "LS";
+  // var LT_Nreqs = "LT_Nreq";
+  // var LT_CSRs = "LT_CSR";
+  // var SSD_Cetins = "SSD_Cetin";
+  // var SSD_IYs = "SSD_IY";
+  // var SSD_RandSs = "SSD_RandS";
+  // var SSD_BandTs = "SSD_BandT";
+
+
+  // $.getJSON(url_LT_CSR, function(data) {CSRvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // console.log("CSR value: "+CSRvalue);
+  // // content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  // $.getJSON(url_LT_Nreq, function(data) {Nvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // // content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  // $.getJSON(url_LS, function(data) {var LogDvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // // LogDvalue = Math.log(LogDvalue);
+  // // console.log("LOg of 4 is " + Math.log(4));
+  // // content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  // $.getJSON(url_SSD_RandS, function(data) {RnSvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // // content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  // $.getJSON(url_SSD_BandT, function(data) {BnTvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  // $.getJSON(url_SSD_Cetin, function(data) {Cetinvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // // content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  // $.getJSON(url_SSD_IY, function(data) {InYvalue = data.features[0].properties.GRAY_INDEX.toString()});
+  // // content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
+// **********************************************************
+
+  // Sets the values from value_point into the variables
+  // console.log(point_value);
+  // // This part adds to the popup
+  // content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
+  // content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
+
+// **********************************************************
+// change my_url to your variable that contains the real url
+  // $.ajax({
+  //   url: url_LT_CSR, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_LT_CSR" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_LT_Nreq, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_LT_Nreq" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_LS, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_LS" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_SSD_RandS, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_SSD_RandS" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_SSD_BandT, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_SSD_BandT" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_SSD_Cetin, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_SSD_Cetin" //do not change this line
+  // });
+  // $.ajax({
+  //   url: url_SSD_IY, // change this line
+  //   dataType: "jsonp", // do not change this line
+  //   jsonpCallback: "parseResponse_SSD_IY" //do not change this line
+  // });
+// **********************************************************
+  // overlay.setPosition(coordinate);
 
 }
 
 // Function query_csv sends parameters to the controllers.py
 function query_csv(lon, lat, year, state, returnPeriod)
 {
-  console.log ("query_csv works")
+
   var csrf_token = getCookie('csrftoken');
   
   var data = {lon: lon, lat: lat, year: year, state: state, returnPeriod: returnPeriod};
@@ -233,7 +405,7 @@ function query_csv(lon, lat, year, state, returnPeriod)
         {            
             if (data.status == "success")
             {
-                console.log ("got data")
+                
                 point_value = data.point_value;
                 // console.log(point_value);
                 // console.log(point_value[0]);

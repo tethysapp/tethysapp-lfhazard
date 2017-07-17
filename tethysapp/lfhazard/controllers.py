@@ -137,8 +137,8 @@ def query_csv(request):
       LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
       path_extension = [LS_path, LT_path, SSD_path]
-      # csv_base_path = '/home/tethys/tethysdev/csv/' # Local path
-      csv_base_path = '/lf_hazard/'+year+'/' # Server path
+      csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
+      #csv_base_path = '/lf_hazard/'+year+'/' # Server path
      
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
@@ -150,8 +150,8 @@ def query_csv(request):
 
           next(row) # this skips the first line
           for line in row:
+            # print line
             line = line.rstrip().split(',')
-
             # This sets up the lat and lon read from csv file
             temp_lon = float(line[0])
             temp_lat = float(line[1])
@@ -225,32 +225,13 @@ def query_csv(request):
                 quad_line_tracker[6] = line
 
           
-          print "Working on SSD file"
-          print "####################"  
-          print "This is the 1st Quadrant"
-          print " This is the 1st distance: "+str(dist[0])
-          print " This is the 2nd distance: "+str(dist[1])
-          print " This is the 1st line: "+str(quad_line_tracker[0])
-          print " This is the 2nd line: "+str(quad_line_tracker[1])
-          print "This is the 2nd Quadrant"
-          print " This is the 1st distance: "+str(dist[2])
-          print " This is the 2nd distance: "+str(dist[3])
-          print " This is the 1st line: "+str(quad_line_tracker[2])
-          print " This is the 2nd line: "+str(quad_line_tracker[3])
-          print "This is the 3rd Quadrant"
-          print " This is the 1st distance: "+str(dist[4])
-          print " This is the 2nd distance: "+str(dist[5])
-          print " This is the 1st line: "+str(quad_line_tracker[4])
-          print " This is the 2nd line: "+str(quad_line_tracker[5])
-          print "This is the 4th Quadrant"
-          print " This is the 1st distance: "+str(dist[6])
-          print " This is the 2nd distance: "+str(dist[7])
-          print " This is the 1st line: "+str(quad_line_tracker[6])
-          print " This is the 2nd line: "+str(quad_line_tracker[7])
+          
+          
           # This part calculates the values.
           print "***********"
           if ext[:2] == "LS":
             print "Working on LS file"
+            
             i=0
             temp_numerator = 0
             temp_denominator = 0
@@ -279,19 +260,18 @@ def query_csv(request):
 
           elif ext[:2] == "LT":
             print "Working on LT file"
-
             # i, place and v are values to help keep track in loop.
             i=0
             place=0
             v=[2,3]
             # temp_numerator and temp_denominator are numerator and denominator
             # of the IDW equation.
-            temp_numerator = 0
-            temp_denominator = 0
             # LT_IDW[0]=Cetin value, LT_IDW[1]=CSR value.
             LT_IDW = [0,0]
 
             for j in v:
+              temp_numerator = 0
+              temp_denominator = 0
               for i in range(8):
                 if dist[i] == 10000:
                   continue
@@ -307,21 +287,43 @@ def query_csv(request):
             point_value.append(LT_IDW[1])
 
           elif ext[:2] == "SS":
+            print "Working on SSD file"
             
-
+            print "####################"  
+            print "This is the 1st Quadrant"
+            print " This is the 1st distance: "+str(dist[0])
+            print " This is the 2nd distance: "+str(dist[1])
+            print " This is the 1st line: "+str(quad_line_tracker[0])
+            print " This is the 2nd line: "+str(quad_line_tracker[1])
+            print "This is the 2nd Quadrant"
+            print " This is the 1st distance: "+str(dist[2])
+            print " This is the 2nd distance: "+str(dist[3])
+            print " This is the 1st line: "+str(quad_line_tracker[2])
+            print " This is the 2nd line: "+str(quad_line_tracker[3])
+            print "This is the 3rd Quadrant"
+            print " This is the 1st distance: "+str(dist[4])
+            print " This is the 2nd distance: "+str(dist[5])
+            print " This is the 1st line: "+str(quad_line_tracker[4])
+            print " This is the 2nd line: "+str(quad_line_tracker[5])
+            print "This is the 4th Quadrant"
+            print " This is the 1st distance: "+str(dist[6])
+            print " This is the 2nd distance: "+str(dist[7])
+            print " This is the 1st line: "+str(quad_line_tracker[6])
+            print " This is the 2nd line: "+str(quad_line_tracker[7])
              # i, place and v are values to help keep track in loop.
             i=0
             place=0
             v=[2,3,4,5]
             # temp_numerator and temp_denominator are numerator and denominator
             # of the IDW equation.
-            temp_numerator = 0
-            temp_denominator = 0
             # SSD_IDW[0]=Cetin percent, SSD_IDW[1]=I&Y percent, 
             # SSD_IDW[2]=PBR&S, SSD_IDW[3]=PBR&T.
             SSD_IDW = [0,0,0,0]
   
             for j in v:
+              print "next number: " + str(j)
+              temp_numerator = 0
+              temp_denominator = 0
               for i in range(8):
                 if dist[i] == 10000:
                   continue
