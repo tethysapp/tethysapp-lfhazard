@@ -10,6 +10,7 @@ var SSD_RandS;
 var SSD_BandT;
 var map;
 var overlay;
+var allow_popup;
 var container = document.getElementById('popup');
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
@@ -162,14 +163,14 @@ function submitButton() {
 // This is the new popup builder
 // ************************************
 function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue) {
-  console.log ("Working on the new popup");
-  console.log (LogDvalue);
-  console.log (CSRvalue);
-  console.log (Nvalue);
-  console.log (RnSvalue);
-  console.log (BnTvalue);
-  console.log (Cetinvalue);
-  console.log (InYvalue);
+  // console.log ("Working on the new popup");
+  // console.log (LogDvalue);
+  // console.log (CSRvalue);
+  // console.log (Nvalue);
+  // console.log (RnSvalue);
+  // console.log (BnTvalue);
+  // console.log (Cetinvalue);
+  // console.log (InYvalue);
 
 
   var view = map.getView();
@@ -197,7 +198,7 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
 // ************************************
 function getPopup(coordinate) {
   update();
-  console.log ("getPopup works")
+  // console.log ("getPopup works")
   // var view = map.getView();
   // var viewResolution = view.getResolution();
 
@@ -208,9 +209,11 @@ function getPopup(coordinate) {
   var declon = parseFloat(dec[0]).toFixed(5);
   var declat = parseFloat(dec[1]).toFixed(5);
 
+  // query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
+
+  
   query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
-
-
+  
   // content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
 
 
@@ -219,7 +222,7 @@ function getPopup(coordinate) {
 // Function query_csv sends parameters to the controllers.py
 function query_csv(lon, lat, year, state, returnPeriod)
 {
-  console.log ("query_csv works")
+  // console.log ("query_csv works")
   var csrf_token = getCookie('csrftoken');
   
   var data = {lon: lon, lat: lat, year: year, state: state, returnPeriod: returnPeriod};
@@ -233,14 +236,14 @@ function query_csv(lon, lat, year, state, returnPeriod)
         {            
             if (data.status == "success")
             {
-                console.log ("got data")
+                // console.log ("got data")
                 point_value = data.point_value;
                 // console.log(point_value);
                 // console.log(point_value[0]);
                 // console.log("These are the lon and lat: "+ lon + " & "+ lat);
                 var newcoor = ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326','EPSG:3857');
-                console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
-                console.log("Connected to map.js")
+                // console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
+                // console.log("Connected to map.js")
                 newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
 
 
@@ -262,6 +265,39 @@ function query_csv(lon, lat, year, state, returnPeriod)
     });
 }
 
+function checkstate(){
+  var select= new ol.interaction.Select({
+          multi: true // multi is used in this example if hitTolerance > 0
+   });
+
+  map.addInteraction(select);
+
+  select.on('select', function(e){
+    var state_clicked
+    var state_dropdown
+    var pnt = e.mapBrowserEvent.coordinate;
+    console.log ("Clicked on: "+ pnt);
+    try{
+      state_clicked = e.target.getFeatures().getArray()[0].getId();
+      console.log("State clickd: "+state_clicked);
+      state_dropdown = document.getElementById('select_state').value;
+      console.log("State droped: "+state_dropdown);
+      allow_popup=true;
+    }
+    catch(err){
+      alert("Please click in "+ document.getElementById('select_state').value);
+      allow_popup=false;
+    }
+    // if (allow_popup==false){
+    //   alert("Please click in "+ document.getElementById('select_state').value);
+    //   return;
+    // }
+    // else if(allow_popup==true){
+    //   getPopup(pnt);
+    //   return;
+    // }
+  });
+}
 
 function getCookie(name) {
     var cookieValue = null;
@@ -363,35 +399,72 @@ $( document ).ready(function() {
   });
 
   // here is where it checks if its in the state
-  var select= new ol.interaction.Select({
-          multi: true // multi is used in this example if hitTolerance > 0
-   });
+  // var select= new ol.interaction.Select({
+  //         multi: true // multi is used in this example if hitTolerance > 0
+  //  });
 
-  map.addInteraction(select);
+  // map.addInteraction(select);
 
-  select.on('select', function(e){
-    var state_clicked = e.target.getFeatures().getArray()[0].getId();
-    console.log("State clickd:");
-    console.log(state_clicked);
-    var state_dropdown = document.getElementById('select_state').value;
-    console.log("State droped:");
-    console.log(state_dropdown);
-    if (state_clicked  != state_dropdown)
-    {
-      alert("Please click in " + state_dropdown);
-    }      
-  });
-  // $$$$$$$$$$$$$
+  // select.on('select', function(e){
+  //   var state_clicked
+  //   var state_dropdown
+  //   var pnt = e.mapBrowserEvent.coordinate;
+  //   console.log ("Clicked on: "+ pnt);
+  //   try{
+  //     state_clicked = e.target.getFeatures().getArray()[0].getId();
+  //     console.log("State clickd: "+state_clicked);
+  //     state_dropdown = document.getElementById('select_state').value;
+  //     console.log("State droped: "+state_dropdown);
+  //     allow_popup=true;
+  //   }
+  //   catch(err){
+  //     alert("Please click in "+ document.getElementById('select_state').value);
+  //     allow_popup=false;
+  //   }
+  //   // if (allow_popup==false){
+  //   //   alert("Please click in "+ document.getElementById('select_state').value);
+  //   //   return;
+  //   // }
+  //   // else if(allow_popup==true){
+  //   //   getPopup(pnt);
+  //   //   return;
+  //   // }
+  // });
 
+  // select.on('select', function(e){
+  //   var state_clicked
+  //   var state_dropdown
+  //   var pnt = e.mapBrowserEvent.coordinate;
+  //   temp = e.target.getFeatures();
+  //   console.log (temp);
+  //   console.log ("Clicked on: "+ pnt);
+  //   state_clicked = e.target.getFeatures().getArray()[0].getId();
+  //   console.log("State clickd: "+state_clicked);
+  //   state_dropdown = document.getElementById('select_state').value;
+  //   console.log("State droped: "+state_dropdown);
+
+  //   if (state_clicked != state_dropdown){
+  //     alert("Please click in "+ document.getElementById('select_state').value);
+  //     return;
+  //   }
+  //   else {
+  //   }
+  // });
 
   map.on('singleclick', function(evt) {
     if (returnPeriod != "" && state != "" && modelYear != "") {
       onclickcoor = evt.coordinate;
-      console.log("On click: " + onclickcoor);
-      getPopup(onclickcoor);
+      // console.log("On click: " + onclickcoor);
+      checkstate();
+      console.log(allow_popup);
+      if (allow_popup == true) {
+        getPopup(onclickcoor);
+      }
+      
     }
     else {
       alert("No parameters provided");
     }    
   });
+
 });
