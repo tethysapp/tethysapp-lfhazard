@@ -7,8 +7,8 @@
   <Folder id="FeatureLayer0">
     <name>cb_2015_us_state_5m</name>
     <Snippet></Snippet>
-<Placemark id="ID_00036">
-      <name>South Carolina</name>
+<Placemark id="South_Carolina">
+      <name>South_Carolina</name>
       <Snippet></Snippet>
       <description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
 

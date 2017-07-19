@@ -11,6 +11,7 @@ var SSD_BandT;
 var map;
 var overlay;
 var allow_popup;
+var select;
 var container = document.getElementById('popup');
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
@@ -265,39 +266,15 @@ function query_csv(lon, lat, year, state, returnPeriod)
     });
 }
 
-function checkstate(){
-  var select= new ol.interaction.Select({
-          multi: true // multi is used in this example if hitTolerance > 0
-   });
-
-  map.addInteraction(select);
-
-  select.on('select', function(e){
-    var state_clicked
-    var state_dropdown
-    var pnt = e.mapBrowserEvent.coordinate;
-    console.log ("Clicked on: "+ pnt);
-    try{
-      state_clicked = e.target.getFeatures().getArray()[0].getId();
-      console.log("State clickd: "+state_clicked);
-      state_dropdown = document.getElementById('select_state').value;
-      console.log("State droped: "+state_dropdown);
-      allow_popup=true;
+function checkstate(pnt,state_layer){
+  var check = state_layer.getSource().getFeaturesAtCoordinate(pnt);
+  if (check.length == 0){
+    return false;
+  }
+  else {
+    return true;
     }
-    catch(err){
-      alert("Please click in "+ document.getElementById('select_state').value);
-      allow_popup=false;
-    }
-    // if (allow_popup==false){
-    //   alert("Please click in "+ document.getElementById('select_state').value);
-    //   return;
-    // }
-    // else if(allow_popup==true){
-    //   getPopup(pnt);
-    //   return;
-    // }
-  });
-}
+  }
 
 function getCookie(name) {
     var cookieValue = null;
@@ -399,37 +376,40 @@ $( document ).ready(function() {
   });
 
   // here is where it checks if its in the state
-  var select= new ol.interaction.Select({
+  select= new ol.interaction.Select({
           multi: true // multi is used in this example if hitTolerance > 0
    });
 
-  map.addInteraction(select);
+  // map.addInteraction(select);
 
-  select.on('select', function(e){
-    var state_clicked
-    var state_dropdown
-    var pnt = e.mapBrowserEvent.coordinate;
-    console.log ("Clicked on: "+ pnt);
-    try{
-      state_clicked = e.target.getFeatures().getArray()[0].getId();
-      console.log("State clickd: "+state_clicked);
-      state_dropdown = document.getElementById('select_state').value;
-      console.log("State droped: "+state_dropdown);
-      allow_popup=true;
-    }
-    catch(err){
-      alert("Please click in "+ document.getElementById('select_state').value);
-      allow_popup=false;
-    }
-    // if (allow_popup==false){
-    //   alert("Please click in "+ document.getElementById('select_state').value);
-    //   return;
-    // }
-    // else if(allow_popup==true){
-    //   getPopup(pnt);
-    //   return;
-    // }
-  });
+  // select.on('select', function(e){
+  //   var state_clicked
+  //   var state_dropdown
+  //   var pnt = e.mapBrowserEvent.coordinate;
+  //   console.log ("Clicked on: "+ pnt);
+  //   try{
+  //     state_clicked = e.target.getFeatures().getArray()[0].getId();
+  //     console.log("State clickd: "+state_clicked);
+  //     state_dropdown = document.getElementById('select_state').value;
+  //     console.log("State droped: "+state_dropdown);
+  //     allow_popup=true;
+  //     getPopup(pnt);
+  //     e.mapBrowserEvent.coordinate = [0,0];
+  //     map.dispatchEvent(e);
+  //   }
+  //   catch(err){
+  //     alert("Please click in "+ document.getElementById('select_state').value);
+  //     allow_popup=false;
+  //   }
+  //   // if (allow_popup==false){
+  //   //   alert("Please click in "+ document.getElementById('select_state').value);
+  //   //   return;
+  //   // }
+  //   // else if(allow_popup==true){
+  //   //   getPopup(pnt);
+  //   //   return;
+  //   // }
+  // });
 
   // select.on('select', function(e){
   //   var state_clicked
@@ -477,10 +457,14 @@ $( document ).ready(function() {
   map.on('singleclick', function(evt) {
     if (returnPeriod != "" && state != "" && modelYear != "") {
       onclickcoor = evt.coordinate;
-      // console.log("On click: " + onclickcoor);
-      console.log(allow_popup);
+      console.log("On click: " + onclickcoor);
+      if (checkstate(onclickcoor,states) == true) {
+        getPopup(onclickcoor);
+      }
+      else{
+        alert ("not in state");
+      }
       
-      getPopup(onclickcoor);
       
       
     }
