@@ -137,13 +137,19 @@ def query_csv(request):
       LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
       path_extension = [LS_path, LT_path, SSD_path]
-      # csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
-      csv_base_path = '/lf_hazard/'+year+'/' # Server path
-     
+      csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
+      # csv_base_path = '/lf_hazard/'+year+'/' # Server path
+
+      # This part helps with telling if you are working on the local or serverpath
+      if csv_base_path[:2] == "/h":
+        print "Connected to Local path"
+      elif csv_base_path[:2] == "/l":
+        print "Connected to Server path"
+
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
         csv_file_path = csv_base_path + extension
-        print "Now working on: " + csv_file_path
+        # print "Now working on: " + csv_file_path
         ext = str(extension)
         with open(csv_file_path, 'r') as row:
 

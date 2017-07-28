@@ -5,13 +5,41 @@
 {% load tethys_gizmos %}
 
 {% block app_navigation_items %}
-  <form id="Stateform">
+
+<div class="dropdown">
+<button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</div>
+
+  <p style="font-size:120%;color:black;">State:</p>
+  <select id='select_state' name='select_state'>
+    <option value='Utah' selected='selected'>Utah
+    <option value='Alaska'> Alaska
+    <option value='Idaho'> Idaho
+    <option value='Montana'> Montana
+    <option value='South_Carolina'> South Carolina
+    <option value='Connecticut'> Connecticut
+    <option value='Oregon'> Oregon
+  </select>
+  <p style="font-size:120%;color:black;">Year:</p>
+  <select id='select_modelYear' name='select_modelYear'>
+    <option value='2008' selected='selected'>2008
+  </select>
+  <p></p>
+
+
+
+  <!-- <form id="Stateform">
       {% csrf_token %}
       {% gizmo select_input select_state %}
-  </form>
-  <form id="ModelYearform">
+  </form> -->
+  <!-- <form id="ModelYearform">
       {% gizmo select_input select_modelYear %}
-  </form>
+  </form> -->
   <form id="ReturnPeriodform">
       {% gizmo select_input select_returnPeriod %}
   </form>

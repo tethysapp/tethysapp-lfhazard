@@ -247,8 +247,6 @@ function query_csv(lon, lat, year, state, returnPeriod)
                 // console.log("Connected to map.js")
                 newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
 
-
-
             }
             else
             {
@@ -337,23 +335,75 @@ $( document ).ready(function() {
         })
       });
 
-  $('#Stateform').change(function(){
-  map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
-  var state = document.getElementById('select_state').value;
-  console.log("state selected:    " + state);
-  states = new ol.layer.Vector({
-      source: new ol.source.Vector({
-        url: '/static/lfhazard/kml/' + state + '.kml',
-        format: new ol.format.KML()
-      })
-    });
-  map.addLayer(states);
-  map.updateSize();
-  update();
-  myState = map.getLayers().item(1).getSource().getExtent();
-  var ex = states.getSource().getExtent()
-  map.getView().fit(state_extent[state], map.getSize());
+  var bOptions = {
+    "Utah": [2008, 2014],
+    "Alaska": [2007, 2014],
+    "Idaho": [2008, 2014],
+    "Montana": [2008, 2014],
+    "South_Carolina": [2008, 2014],
+    "Connecticut": [2008, 2014],
+    "Oregon": [2014]
+  };
+
+  var select_state = document.getElementById('select_state');
+  var select_modelYear = document.getElementById('select_modelYear');
+
+  //on change is a good event for this because you are guarenteed the value is different
+  $('#select_state').change(function(){
+    map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
+    var state = document.getElementById('select_state').value;
+    console.log("state selected: " + state);
+    states = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          url: '/static/lfhazard/kml/' + state + '.kml',
+          format: new ol.format.KML()
+        })
+      });
+    map.addLayer(states);
+    map.updateSize();
+    update();
+    myState = map.getLayers().item(1).getSource().getExtent();
+    var ex = states.getSource().getExtent()
+    map.getView().fit(state_extent[state], map.getSize());
+    //This part changes the Year option
+    //clear out select_modelYear
+    select_modelYear.length = 0;
+    //get the selected value from A
+    var _val = this.options[this.selectedIndex].value;
+    //loop through bOption at the selected value
+    for (var i in bOptions[_val]) {
+      //create option tag
+      var op = document.createElement('option');
+      //set its value
+      op.value = bOptions[_val][i];
+      //set the display label
+      op.text = bOptions[_val][i];
+      //append it to select_modelYear
+      select_modelYear.appendChild(op);
+    }
   });
+
+  $('#select_modelYear').change(function(){
+    select_modelYear = document.getElementById('select_modelYear');
+  });
+
+  // $('#Stateform').change(function(){
+  // map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
+  // var state = document.getElementById('select_state').value;
+  // console.log("state selected:    " + state);
+  // states = new ol.layer.Vector({
+  //     source: new ol.source.Vector({
+  //       url: '/static/lfhazard/kml/' + state + '.kml',
+  //       format: new ol.format.KML()
+  //     })
+  //   });
+  // map.addLayer(states);
+  // map.updateSize();
+  // update();
+  // myState = map.getLayers().item(1).getSource().getExtent();
+  // var ex = states.getSource().getExtent()
+  // map.getView().fit(state_extent[state], map.getSize());
+  // });
 
   $('#ModelYearform').change(function(){
     console.log('Model Year changed');
