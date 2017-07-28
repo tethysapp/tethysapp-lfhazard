@@ -385,33 +385,16 @@ $( document ).ready(function() {
 
   $('#select_modelYear').change(function(){
     select_modelYear = document.getElementById('select_modelYear');
-  });
 
-  // $('#Stateform').change(function(){
-  // map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
-  // var state = document.getElementById('select_state').value;
-  // console.log("state selected:    " + state);
-  // states = new ol.layer.Vector({
-  //     source: new ol.source.Vector({
-  //       url: '/static/lfhazard/kml/' + state + '.kml',
-  //       format: new ol.format.KML()
-  //     })
-  //   });
-  // map.addLayer(states);
-  // map.updateSize();
-  // update();
-  // myState = map.getLayers().item(1).getSource().getExtent();
-  // var ex = states.getSource().getExtent()
-  // map.getView().fit(state_extent[state], map.getSize());
-  // });
+  });
 
   $('#ModelYearform').change(function(){
     console.log('Model Year changed');
     getPopup(onclickcoor);
   });
 
-  $('#ReturnPeriodform').change(function(){
-    console.log('Return Period changed');
+  $('#select_returnPeriod').change(function(){
+    console.log('Return Period:' + str(document.getElementById('select_returnPeriod').value));
     getPopup(onclickcoor);
   });
 

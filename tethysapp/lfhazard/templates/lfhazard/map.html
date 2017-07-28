@@ -6,16 +6,8 @@
 
 {% block app_navigation_items %}
 
-<div class="dropdown">
-<button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
-  </div>
-</div>
-
-  <p style="font-size:120%;color:black;">State:</p>
+<p style="font-size:120%;color:black;">State:</p>
+<div class="select-style">
   <select id='select_state' name='select_state'>
     <option value='Utah' selected='selected'>Utah
     <option value='Alaska'> Alaska
@@ -25,12 +17,25 @@
     <option value='Connecticut'> Connecticut
     <option value='Oregon'> Oregon
   </select>
-  <p style="font-size:120%;color:black;">Year:</p>
+</div>
+<p style="font-size:120%;width:268px;color:black;">Year:</p>
+<div class="select-style">
   <select id='select_modelYear' name='select_modelYear'>
     <option value='2008' selected='selected'>2008
+    <option value='2014'> 2014
   </select>
+</div>
   <p></p>
 
+<!-- <p style="font-size:120%;color:black;">Return Period:</p>
+<div class="select-style">
+  <select id='select_returnPeriod' name='select_returnPeriod'>
+    <option value='475' selected='selected'>475
+    <option value='1033'>1033
+    <option value='2475'>2475
+  </select>
+</div>
+  <p></p> -->
 
 
   <!-- <form id="Stateform">
