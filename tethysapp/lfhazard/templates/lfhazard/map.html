@@ -25,17 +25,17 @@
     <option value='2014'> 2014
   </select>
 </div>
-  <p></p>
+<p></p>
 
 <!-- <p style="font-size:120%;color:black;">Return Period:</p>
 <div class="select-style">
-  <select id='select_returnPeriod' name='select_returnPeriod'>
+  <select id='something' name='something'>
     <option value='475' selected='selected'>475
     <option value='1033'>1033
     <option value='2475'>2475
   </select>
 </div>
-  <p></p> -->
+<p></p> -->
 
 
   <!-- <form id="Stateform">
@@ -45,12 +45,13 @@
   <!-- <form id="ModelYearform">
       {% gizmo select_input select_modelYear %}
   </form> -->
+
   <form id="ReturnPeriodform">
       {% gizmo select_input select_returnPeriod %}
   </form>
       {% gizmo text_input text_input_lat %} 
       {% gizmo text_input text_input_lon %}
-      <input type="button" onclick="submitButton();" name="name-form-submit" class="btn btn-default" value="Submit">
+  <input type="button" onclick="submitButton();" name="name-form-submit" class="btn btn-default" value="Submit">
 
 
   {% if lat and lon %}

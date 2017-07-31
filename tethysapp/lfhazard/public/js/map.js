@@ -388,13 +388,14 @@ $( document ).ready(function() {
 
   });
 
-  $('#ModelYearform').change(function(){
+  $('#something').change(function(){
     console.log('Model Year changed');
-    getPopup(onclickcoor);
+    something = document.getElementById('something').value;
+    alert(something);
   });
 
   $('#select_returnPeriod').change(function(){
-    console.log('Return Period:' + str(document.getElementById('select_returnPeriod').value));
+    console.log('Return Period changed');
     getPopup(onclickcoor);
   });
 
@@ -413,80 +414,6 @@ $( document ).ready(function() {
           multi: true // multi is used in this example if hitTolerance > 0
    });
 
-  // map.addInteraction(select);
-
-  // select.on('select', function(e){
-  //   var state_clicked
-  //   var state_dropdown
-  //   var pnt = e.mapBrowserEvent.coordinate;
-  //   console.log ("Clicked on: "+ pnt);
-  //   try{
-  //     state_clicked = e.target.getFeatures().getArray()[0].getId();
-  //     console.log("State clickd: "+state_clicked);
-  //     state_dropdown = document.getElementById('select_state').value;
-  //     console.log("State droped: "+state_dropdown);
-  //     allow_popup=true;
-  //     getPopup(pnt);
-  //     e.mapBrowserEvent.coordinate = [0,0];
-  //     map.dispatchEvent(e);
-  //   }
-  //   catch(err){
-  //     alert("Please click in "+ document.getElementById('select_state').value);
-  //     allow_popup=false;
-  //   }
-  //   // if (allow_popup==false){
-  //   //   alert("Please click in "+ document.getElementById('select_state').value);
-  //   //   return;
-  //   // }
-  //   // else if(allow_popup==true){
-  //   //   getPopup(pnt);
-  //   //   return;
-  //   // }
-  // });
-
-  // select.on('select', function(e){
-  //   var state_clicked
-  //   var state_dropdown
-  //   var pnt = e.mapBrowserEvent.coordinate;
-  //   temp = e.target.getFeatures();
-  //   console.log (temp);
-  //   console.log ("Clicked on: "+ pnt);
-  //   state_clicked = e.target.getFeatures().getArray()[0].getId();
-  //   console.log("State clickd: "+state_clicked);
-  //   state_dropdown = document.getElementById('select_state').value;
-  //   console.log("State droped: "+state_dropdown);
-
-  //   if (state_clicked != state_dropdown){
-  //     alert("Please click in "+ document.getElementById('select_state').value);
-  //     return;
-  //   }
-  //   else {
-  //   }
-  // });
-
-// map.addInteraction(select);
-
-// select.on('select', function(e)
-// {
-//     var state_clicked;
-//     var state_dropdown;    
-//     var pnt = e.mapBrowserEvent.coordinate;
-//     console.log ("Clicked on: "+ pnt);
-//     state_clicked = e.target.getFeatures().getArray()[0].getId();
-//     console.log("State clickd: "+state_clicked);
-//     state_dropdown = document.getElementById('select_state').value;    
-//     console.log("State droped: "+state_dropdown);
-//     if (state_clicked == state_dropdown )  
-//     {
-//       getPopup(pnt);
-//      }
-//     else
-//     {
-//      alert("Please click in "+ document.getElementById('select_state').value);
-//         return;
-//      }
-//   });
-
   map.on('singleclick', function(evt) {
     if (returnPeriod != "" && state != "" && modelYear != "") {
       onclickcoor = evt.coordinate;
@@ -495,7 +422,7 @@ $( document ).ready(function() {
         getPopup(onclickcoor);
       }
       else{
-        alert ("not in state");
+        alert ("Please click within selected State boundaries");
       }
       
       
