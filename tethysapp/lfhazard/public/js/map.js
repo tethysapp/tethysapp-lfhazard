@@ -199,7 +199,7 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
 // ************************************
 function getPopup(coordinate) {
   update();
-  // console.log ("getPopup works")
+  
   // var view = map.getView();
   // var viewResolution = view.getResolution();
 
@@ -209,10 +209,12 @@ function getPopup(coordinate) {
   var dec = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
   var declon = parseFloat(dec[0]).toFixed(5);
   var declat = parseFloat(dec[1]).toFixed(5);
-
-  // query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
-
-  
+  // console.log ("This are the coordinates: ");
+  // console.log (declon);
+  // console.log (declat);
+  // console.log ("This are the model year: "+ modelYear_global);
+  // console.log ("This are the state: "+ state_global);
+  // console.log ("This are the return period: "+ returnPeriod_global);
   query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
   
   // content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
@@ -385,13 +387,7 @@ $( document ).ready(function() {
 
   $('#select_modelYear').change(function(){
     select_modelYear = document.getElementById('select_modelYear');
-
-  });
-
-  $('#something').change(function(){
-    console.log('Model Year changed');
-    something = document.getElementById('something').value;
-    alert(something);
+    getPopup(onclickcoor);
   });
 
   $('#select_returnPeriod').change(function(){

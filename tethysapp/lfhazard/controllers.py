@@ -149,213 +149,228 @@ def query_csv(request):
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
         csv_file_path = csv_base_path + extension
-        # print "Now working on: " + csv_file_path
-        ext = str(extension)
-        with open(csv_file_path, 'r') as row:
+        # This checks if file exists
+        if os.path.isfile(csv_file_path) == True:
+          print "Is a file"
 
+        
+          # print "Now working on: " + csv_file_path
+          ext = str(extension)
+          with open(csv_file_path, 'r') as row:
 
-          next(row) # this skips the first line
-          for line in row:
-            # print line
-            line = line.rstrip().split(',')
-            # This sets up the lat and lon read from csv file
-            temp_lon = float(line[0])
-            temp_lat = float(line[1])
+            next(row) # this skips the first line
+            for line in row:
+              # print line
+              line = line.rstrip().split(',')
+              # This sets up the lat and lon read from csv file
+              temp_lon = float(line[0])
+              temp_lat = float(line[1])
+              
+              # This tests for Quadrant one
+              if temp_lon >= lon and temp_lat >= lat:
+                
+                # This calculates the distance between two points
+                temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+                
+                # This tests for the distance of point and sorts. 
+                # This will store 2 points close to the coordinates.
+                if temp_dist <= dist[1]:
+                  dist[1] = temp_dist
+                  quad_line_tracker[1] = line
+                if (temp_dist <= dist[0] and temp_dist <= dist[1]):
+                  dist[1]= dist[0]
+                  dist[0] = temp_dist
+                  quad_line_tracker[1] = quad_line_tracker[0]
+                  quad_line_tracker[0] = line
+
+              # This test for Quadrant two
+              if temp_lon <= lon and temp_lat >= lat:
+                
+                # This calculates the distance between two points
+                temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+                
+                # This tests for the distance of point and sorts. 
+                # This will store 2 points close to the coordinates.
+                if temp_dist <= dist[3]:
+                  dist[3] = temp_dist
+                  quad_line_tracker[3] = line
+                if (temp_dist <= dist[2] and temp_dist <= dist[3]):
+                  dist[3]= dist[2]
+                  dist[2] = temp_dist
+                  quad_line_tracker[3] = quad_line_tracker[2]
+                  quad_line_tracker[2] = line
+
+              # This test for Quadrant three
+              if temp_lon <= lon and temp_lat <= lat:
+                
+                # This calculates the distance between two points
+                temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+                
+                # This tests for the distance of point and sorts. 
+                # This will store 2 points close to the coordinates.
+                if temp_dist <= dist[5]:
+                  dist[5] = temp_dist
+                  quad_line_tracker[5] = line
+                if (temp_dist <= dist[4] and temp_dist <= dist[5]):
+                  dist[5]= dist[4]
+                  dist[4] = temp_dist
+                  quad_line_tracker[5] = quad_line_tracker[4]
+                  quad_line_tracker[4] = line
+
+                  # This test for Quadrant four
+              if temp_lon >= lon and temp_lat <= lat:
+                
+                # This calculates the distance between two points
+                temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
+                
+                # This tests for the distance of point and sorts. 
+                # This will store 2 points close to the coordinates.
+                if temp_dist <= dist[7]:
+                  dist[7] = temp_dist
+                  quad_line_tracker[7] = line
+                if (temp_dist <= dist[6] and temp_dist <= dist[7]):
+                  dist[7]= dist[6]
+                  dist[6] = temp_dist
+                  quad_line_tracker[7] = quad_line_tracker[6]
+                  quad_line_tracker[6] = line
+
             
-            # This tests for Quadrant one
-            if temp_lon >= lon and temp_lat >= lat:
+            
+            
+            # This part calculates the values.
+            print "***********"
+            if ext[:2] == "LS":
+              print "Working on LS file"
               
-              # This calculates the distance between two points
-              temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
-              
-              # This tests for the distance of point and sorts. 
-              # This will store 2 points close to the coordinates.
-              if temp_dist <= dist[1]:
-                dist[1] = temp_dist
-                quad_line_tracker[1] = line
-              if (temp_dist <= dist[0] and temp_dist <= dist[1]):
-                dist[1]= dist[0]
-                dist[0] = temp_dist
-                quad_line_tracker[1] = quad_line_tracker[0]
-                quad_line_tracker[0] = line
+              i=0
+              temp_numerator = 0
+              temp_denominator = 0
+              LS_Dm_IDW = 0
 
-            # This test for Quadrant two
-            if temp_lon <= lon and temp_lat >= lat:
-              
-              # This calculates the distance between two points
-              temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
-              
-              # This tests for the distance of point and sorts. 
-              # This will store 2 points close to the coordinates.
-              if temp_dist <= dist[3]:
-                dist[3] = temp_dist
-                quad_line_tracker[3] = line
-              if (temp_dist <= dist[2] and temp_dist <= dist[3]):
-                dist[3]= dist[2]
-                dist[2] = temp_dist
-                quad_line_tracker[3] = quad_line_tracker[2]
-                quad_line_tracker[2] = line
+              # This loop sums up all the values and the distances for the IDW 
+              # equation. 
+              for i in range(8):
+                if dist[i] == 10000:
+                  continue
+                temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
+                temp_numerator = temp_numerator + temp_numerator_add
+                temp_denominator_add = 1/float(math.pow(dist[i],2))
+                temp_denominator = temp_denominator + temp_denominator_add
 
-            # This test for Quadrant three
-            if temp_lon <= lon and temp_lat <= lat:
-              
-              # This calculates the distance between two points
-              temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
-              
-              # This tests for the distance of point and sorts. 
-              # This will store 2 points close to the coordinates.
-              if temp_dist <= dist[5]:
-                dist[5] = temp_dist
-                quad_line_tracker[5] = line
-              if (temp_dist <= dist[4] and temp_dist <= dist[5]):
-                dist[5]= dist[4]
-                dist[4] = temp_dist
-                quad_line_tracker[5] = quad_line_tracker[4]
-                quad_line_tracker[4] = line
+              # LS values need to go through log base 10.
+              LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
 
-                # This test for Quadrant four
-            if temp_lon >= lon and temp_lat <= lat:
-              
-              # This calculates the distance between two points
-              temp_dist = math.sqrt(math.pow(abs(lon-temp_lon),2)+math.pow(abs(lat-temp_lat),2))
-              
-              # This tests for the distance of point and sorts. 
-              # This will store 2 points close to the coordinates.
-              if temp_dist <= dist[7]:
-                dist[7] = temp_dist
-                quad_line_tracker[7] = line
-              if (temp_dist <= dist[6] and temp_dist <= dist[7]):
-                dist[7]= dist[6]
-                dist[6] = temp_dist
-                quad_line_tracker[7] = quad_line_tracker[6]
-                quad_line_tracker[6] = line
+              # This part appends the LS value to the point_value being sent 
+              # to the Javascript.
+              point_value.append(LS_Dm_IDW)
 
-          
-          
-          
-          # This part calculates the values.
-          print "***********"
+              # print str(temp_numerator)
+              # print str(temp_denominator)
+              # print "This is the LS Dm IDW: "+str(LS_Dm_IDW)
+
+            elif ext[:2] == "LT":
+              print "Working on LT file"
+              # i, place and v are values to help keep track in loop.
+              i=0
+              place=0
+              v=[2,3]
+              # temp_numerator and temp_denominator are numerator and denominator
+              # of the IDW equation.
+              # LT_IDW[0]=Cetin value, LT_IDW[1]=CSR value.
+              LT_IDW = [0,0]
+
+              for j in v:
+                temp_numerator = 0
+                temp_denominator = 0
+                for i in range(8):
+                  if dist[i] == 10000:
+                    continue
+                  temp_numerator_add = float(quad_line_tracker[i][j])/float(math.pow(dist[i],2))
+                  temp_numerator = temp_numerator + temp_numerator_add
+                  temp_denominator_add = 1/float(math.pow(dist[i],2))
+                  temp_denominator = temp_denominator + temp_denominator_add
+                LT_IDW[place] = temp_numerator/temp_denominator
+                place +=1
+                
+              
+              point_value.append(LT_IDW[0])
+              point_value.append(LT_IDW[1])
+
+            elif ext[:2] == "SS":
+              print "Working on SSD file"
+              
+              print "####################"  
+              print "This is the 1st Quadrant"
+              print " This is the 1st distance: "+str(dist[0])
+              print " This is the 2nd distance: "+str(dist[1])
+              print " This is the 1st line: "+str(quad_line_tracker[0])
+              print " This is the 2nd line: "+str(quad_line_tracker[1])
+              print "This is the 2nd Quadrant"
+              print " This is the 1st distance: "+str(dist[2])
+              print " This is the 2nd distance: "+str(dist[3])
+              print " This is the 1st line: "+str(quad_line_tracker[2])
+              print " This is the 2nd line: "+str(quad_line_tracker[3])
+              print "This is the 3rd Quadrant"
+              print " This is the 1st distance: "+str(dist[4])
+              print " This is the 2nd distance: "+str(dist[5])
+              print " This is the 1st line: "+str(quad_line_tracker[4])
+              print " This is the 2nd line: "+str(quad_line_tracker[5])
+              print "This is the 4th Quadrant"
+              print " This is the 1st distance: "+str(dist[6])
+              print " This is the 2nd distance: "+str(dist[7])
+              print " This is the 1st line: "+str(quad_line_tracker[6])
+              print " This is the 2nd line: "+str(quad_line_tracker[7])
+               # i, place and v are values to help keep track in loop.
+              i=0
+              place=0
+              v=[2,3,4,5]
+              # temp_numerator and temp_denominator are numerator and denominator
+              # of the IDW equation.
+              # SSD_IDW[0]=Cetin percent, SSD_IDW[1]=I&Y percent, 
+              # SSD_IDW[2]=PBR&S, SSD_IDW[3]=PBR&T.
+              SSD_IDW = [0,0,0,0]
+    
+              for j in v:
+                temp_numerator = 0
+                temp_denominator = 0
+                for i in range(8):
+                  if dist[i] == 10000:
+                    continue
+                  temp_numerator_add = float(quad_line_tracker[i][j])/float(math.pow(dist[i],2))
+                  temp_numerator = temp_numerator + temp_numerator_add
+                  temp_denominator_add = 1/float(math.pow(dist[i],2))
+                  temp_denominator = temp_denominator + temp_denominator_add
+                SSD_IDW[place] = temp_numerator/temp_denominator
+                place +=1
+              
+              point_value.append(SSD_IDW[0])
+              point_value.append(SSD_IDW[1])
+              point_value.append(SSD_IDW[2])
+              point_value.append(SSD_IDW[3])
+
+            # Resets the variables dist and quad_line_tracker
+            dist = [10000,10000,10000,10000,10000,10000,10000,10000]
+            quad_line_tracker=[0,0,0,0,0,0,0,0]
+            print "The end of the Line"
+        else:
+          print "Is not a file"
           if ext[:2] == "LS":
-            print "Working on LS file"
-            
-            i=0
-            temp_numerator = 0
-            temp_denominator = 0
-            LS_Dm_IDW = 0
-
-            # This loop sums up all the values and the distances for the IDW 
-            # equation. 
-            for i in range(8):
-              if dist[i] == 10000:
-                continue
-              temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
-              temp_numerator = temp_numerator + temp_numerator_add
-              temp_denominator_add = 1/float(math.pow(dist[i],2))
-              temp_denominator = temp_denominator + temp_denominator_add
-
-            # LS values need to go through log base 10.
-            LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
-
-            # This part appends the LS value to the point_value being sent 
-            # to the Javascript.
-            point_value.append(LS_Dm_IDW)
-
-            # print str(temp_numerator)
-            # print str(temp_denominator)
-            # print "This is the LS Dm IDW: "+str(LS_Dm_IDW)
-
+            point_value.append("No Answer Yet")
           elif ext[:2] == "LT":
-            print "Working on LT file"
-            # i, place and v are values to help keep track in loop.
-            i=0
-            place=0
-            v=[2,3]
-            # temp_numerator and temp_denominator are numerator and denominator
-            # of the IDW equation.
-            # LT_IDW[0]=Cetin value, LT_IDW[1]=CSR value.
-            LT_IDW = [0,0]
-
-            for j in v:
-              temp_numerator = 0
-              temp_denominator = 0
-              for i in range(8):
-                if dist[i] == 10000:
-                  continue
-                temp_numerator_add = float(quad_line_tracker[i][j])/float(math.pow(dist[i],2))
-                temp_numerator = temp_numerator + temp_numerator_add
-                temp_denominator_add = 1/float(math.pow(dist[i],2))
-                temp_denominator = temp_denominator + temp_denominator_add
-              LT_IDW[place] = temp_numerator/temp_denominator
-              place +=1
-              
-            
-            point_value.append(LT_IDW[0])
-            point_value.append(LT_IDW[1])
-
+            point_value.append("No Answer Yet")
+            point_value.append("No Answer Yet")
           elif ext[:2] == "SS":
-            print "Working on SSD file"
-            
-            print "####################"  
-            print "This is the 1st Quadrant"
-            print " This is the 1st distance: "+str(dist[0])
-            print " This is the 2nd distance: "+str(dist[1])
-            print " This is the 1st line: "+str(quad_line_tracker[0])
-            print " This is the 2nd line: "+str(quad_line_tracker[1])
-            print "This is the 2nd Quadrant"
-            print " This is the 1st distance: "+str(dist[2])
-            print " This is the 2nd distance: "+str(dist[3])
-            print " This is the 1st line: "+str(quad_line_tracker[2])
-            print " This is the 2nd line: "+str(quad_line_tracker[3])
-            print "This is the 3rd Quadrant"
-            print " This is the 1st distance: "+str(dist[4])
-            print " This is the 2nd distance: "+str(dist[5])
-            print " This is the 1st line: "+str(quad_line_tracker[4])
-            print " This is the 2nd line: "+str(quad_line_tracker[5])
-            print "This is the 4th Quadrant"
-            print " This is the 1st distance: "+str(dist[6])
-            print " This is the 2nd distance: "+str(dist[7])
-            print " This is the 1st line: "+str(quad_line_tracker[6])
-            print " This is the 2nd line: "+str(quad_line_tracker[7])
-             # i, place and v are values to help keep track in loop.
-            i=0
-            place=0
-            v=[2,3,4,5]
-            # temp_numerator and temp_denominator are numerator and denominator
-            # of the IDW equation.
-            # SSD_IDW[0]=Cetin percent, SSD_IDW[1]=I&Y percent, 
-            # SSD_IDW[2]=PBR&S, SSD_IDW[3]=PBR&T.
-            SSD_IDW = [0,0,0,0]
-  
-            for j in v:
-              temp_numerator = 0
-              temp_denominator = 0
-              for i in range(8):
-                if dist[i] == 10000:
-                  continue
-                temp_numerator_add = float(quad_line_tracker[i][j])/float(math.pow(dist[i],2))
-                temp_numerator = temp_numerator + temp_numerator_add
-                temp_denominator_add = 1/float(math.pow(dist[i],2))
-                temp_denominator = temp_denominator + temp_denominator_add
-              SSD_IDW[place] = temp_numerator/temp_denominator
-              place +=1
-            
-            point_value.append(SSD_IDW[0])
-            point_value.append(SSD_IDW[1])
-            point_value.append(SSD_IDW[2])
-            point_value.append(SSD_IDW[3])
-
-          # Resets the variables dist and quad_line_tracker
-          dist = [10000,10000,10000,10000,10000,10000,10000,10000]
-          quad_line_tracker=[0,0,0,0,0,0,0,0]
-
-
-
+            point_value.append("No Answer Yet")
+            point_value.append("No Answer Yet")
+            point_value.append("No Answer Yet")
+            point_value.append("No Answer Yet")
 
 
 
       # write your logic here to get the value at lon, lat
       
       result["status"] = "success"
+      print "These are the point_values"
       print point_value
       result["point_value"] = point_value
     else:
