@@ -137,6 +137,7 @@ def query_csv(request):
       LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
       path_extension = [LS_path, LT_path, SSD_path]
+      # comment the first and uncomment the second before uploading
       # csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
       csv_base_path = '/lf_hazard/'+year+'/' # Server path
 
@@ -149,15 +150,13 @@ def query_csv(request):
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
         csv_file_path = csv_base_path + extension
+        ext = str(extension)
         # This checks if file exists
         if os.path.isfile(csv_file_path) == True:
           print "Is a file"
-
-        
           # print "Now working on: " + csv_file_path
-          ext = str(extension)
+          
           with open(csv_file_path, 'r') as row:
-
             next(row) # this skips the first line
             for line in row:
               # print line

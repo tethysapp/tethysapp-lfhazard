@@ -63,3 +63,35 @@
 .select-style select:focus {
     outline: none;
 }
+#myTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#myTable td, #myTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#myTable td:last-child {
+    border :none;
+    flex: 1;
+    background-color: #ffffff;
+}
+
+#myTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#myTable tr:last-child {
+  border :none;
+  flex: 1;
+  background-color: #ffffff;
+}
+
+#myTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}

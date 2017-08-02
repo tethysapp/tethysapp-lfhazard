@@ -37,6 +37,7 @@ var returnPeriod_global;
 var state_global;
 var modelYear_global;
 var point_value;
+var row_counter = 0;
 
 function update() {
   console.log("hello");
@@ -190,9 +191,40 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
   content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<button id="Add_values" onclick="Add_values('+declon+','+declat+','+LogDvalue+','+Nvalue+','+CSRvalue+','+Cetinvalue+','+InYvalue+','+RnSvalue+','+BnTvalue+')">Add</button>';
   overlay.setPosition(coordinate);
 }
-
+function Add_values(lon,lat,logDvalue,Nvalue,CSRvalue,Cetinvalue,InYvalue,RnSvalue,BnTvalue){
+  var table = document.getElementById("myTable");
+  row_counter = row_counter + 1;
+  console.log(row_counter);
+  var row = table.insertRow(1);
+  var cell0 = row.insertCell(0);
+  var cell1 = row.insertCell(1);
+  var cell2 = row.insertCell(2);
+  var cell3 = row.insertCell(3);
+  var cell4 = row.insertCell(4);
+  var cell5 = row.insertCell(5);
+  var cell6 = row.insertCell(6);
+  var cell7 = row.insertCell(7);
+  var cell8 = row.insertCell(8);
+  var cell9 = row.insertCell(9);
+  cell0.innerHTML = lon;
+  cell1.innerHTML = lat;
+  cell2.innerHTML = (parseFloat(logDvalue).toFixed(4));
+  cell3.innerHTML = (parseFloat(Nvalue).toFixed(2));
+  cell4.innerHTML = (parseFloat(CSRvalue).toFixed(2));
+  cell5.innerHTML = (parseFloat(Cetinvalue).toFixed(2));
+  cell6.innerHTML = (parseFloat(InYvalue).toFixed(2));
+  cell7.innerHTML = (parseFloat(RnSvalue).toFixed(2));
+  cell8.innerHTML = (parseFloat(BnTvalue).toFixed(2));
+  cell9.innerHTML = '<button id="Delete_row" onclick="Delete_row(this)">Delete Row</button>';
+}
+function Delete_row(r) {
+    var i = r.parentNode.parentNode.rowIndex;
+    document.getElementById("myTable").deleteRow(i);
+    row_counter = row_counter - 1;
+}
 
 // ************************************
 // This makes the pup with all the information
@@ -339,7 +371,7 @@ $( document ).ready(function() {
 
   var bOptions = {
     "Utah": [2008, 2014],
-    "Alaska": [2007, 2014],
+    "Alaska": [2007],
     "Idaho": [2008, 2014],
     "Montana": [2008, 2014],
     "South_Carolina": [2008, 2014],

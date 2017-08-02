@@ -67,9 +67,23 @@
     <h1>Liquefaction Hazard Map</h1>
     {% gizmo map_view map_options %}
     <div id="map" class="map"></div>
-
-
-
+    <div style="overflow-x:auto;">
+      <table id="myTable">
+        <tr>
+          <th><i><b>Longitude</b></i></th>
+          <th><i><b>Latitude</b></i></th>
+          <th><i><b>Log D<sub>h</sub><sup>ref</sup></b></i></th>
+          <th><i><b>CSR(%)<sup>ref</sup></b></i></th>
+          <th><i><b>N<sub>req</sub><sup>ref</sup></b></i></th>
+          <th><i><b>D<sub>R&S</sub><sup>ref</sup></b></i></th>
+          <th><i><b>D<sub>B&T</sub><sup>ref</sup></b></i></th>
+          <th><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b></i></th>
+          <th><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b></th>
+          <td><b><button id="Download_data" onclick="Download_data()">Download Data</button></b></td>
+        </tr>
+      </table>
+    </div>
+    <br>
     <div id="popup" class="ol-popup">
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
