@@ -209,16 +209,20 @@ function Add_values(lon,lat,logDvalue,Nvalue,CSRvalue,Cetinvalue,InYvalue,RnSval
   var cell7 = row.insertCell(7);
   var cell8 = row.insertCell(8);
   var cell9 = row.insertCell(9);
-  cell0.innerHTML = lon;
-  cell1.innerHTML = lat;
-  cell2.innerHTML = (parseFloat(logDvalue).toFixed(4));
-  cell3.innerHTML = (parseFloat(Nvalue).toFixed(2));
-  cell4.innerHTML = (parseFloat(CSRvalue).toFixed(2));
-  cell5.innerHTML = (parseFloat(Cetinvalue).toFixed(2));
-  cell6.innerHTML = (parseFloat(InYvalue).toFixed(2));
-  cell7.innerHTML = (parseFloat(RnSvalue).toFixed(2));
-  cell8.innerHTML = (parseFloat(BnTvalue).toFixed(2));
-  cell9.innerHTML = '<button id="Delete_row" onclick="Delete_row(this)">Delete Row</button>';
+  var cell10 = row.insertCell(10);
+  var cell11 = row.insertCell(11);
+  cell0.innerHTML = modelYear_global;
+  cell1.innerHTML = returnPeriod_global;
+  cell2.innerHTML = lon;
+  cell3.innerHTML = lat;
+  cell4.innerHTML = (parseFloat(logDvalue).toFixed(4));
+  cell5.innerHTML = (parseFloat(Nvalue).toFixed(2));
+  cell6.innerHTML = (parseFloat(CSRvalue).toFixed(2));
+  cell7.innerHTML = (parseFloat(Cetinvalue).toFixed(2));
+  cell8.innerHTML = (parseFloat(InYvalue).toFixed(2));
+  cell9.innerHTML = (parseFloat(RnSvalue).toFixed(2));
+  cell10.innerHTML = (parseFloat(BnTvalue).toFixed(2));
+  cell11.innerHTML = '<button id="Delete_row" onclick="Delete_row(this)">Delete Row</button>';
 }
 function Delete_row(r) {
     var i = r.parentNode.parentNode.rowIndex;
