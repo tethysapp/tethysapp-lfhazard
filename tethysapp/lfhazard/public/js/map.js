@@ -252,10 +252,6 @@ function getPopup(coordinate) {
   // console.log ("This are the state: "+ state_global);
   // console.log ("This are the return period: "+ returnPeriod_global);
   query_csv(declon, declat, modelYear_global, state_global, returnPeriod_global);
-  
-  // content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
-
-
 }
 
 // Function query_csv sends parameters to the controllers.py
