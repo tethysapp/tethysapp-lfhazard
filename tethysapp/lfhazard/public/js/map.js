@@ -229,6 +229,17 @@ function Delete_row(r) {
     document.getElementById("myTable").deleteRow(i);
     row_counter = row_counter - 1;
 }
+function Download_data(){
+  var table = document.getElementById("myTable").innerHTML;
+  var data = table.replace(/<thead>/g, '')
+    .replace(/<\/thead>/g, '')
+    .replace(/<tbody>/g, '')
+    .replace(/<\/tbody>/g, '')
+    .replace(/<tr>/g, '')
+    .replace(/<\/tr>/g, '\r\n');
+
+  alert(data);
+}
 
 // ************************************
 // This makes the pup with all the information
