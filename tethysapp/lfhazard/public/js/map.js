@@ -231,14 +231,46 @@ function Delete_row(r) {
 }
 function Download_data(){
   var table = document.getElementById("myTable").innerHTML;
+  var h = "h"
   var data = table.replace(/<thead>/g, '')
     .replace(/<\/thead>/g, '')
     .replace(/<tbody>/g, '')
     .replace(/<\/tbody>/g, '')
+    .replace(/<td>/g, '')
+    .replace(/<\/td>/g, ';')
+    .replace(/<th>/g, '')
+    .replace(/<\/th>/g, ';')
+    .replace(/<i>/g, '')
+    .replace(/<\/i>/g, '')
+    .replace(/<b>/g, '')
+    .replace(/<\/b>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/<sub>/g, ' ')
+    .replace(/<\/sub>/g, ' ')
+    .replace(/<sup>/g, ' ')
+    .replace(/<\/sup>/g, ' ')
+    .replace(/<button /g, '')
+    .replace(/id="Download_data" /g, '')
+    .replace(/onclick="Download/g, '')
+    .replace(/_/g, '')
+    .replace(/data/g, '')
+    .replace(/\(/g, '')
+    .replace(/\)/g, '')
+    .replace(/">Download Data/g, '')
+    .replace(/<\/button>/g, '')
+    .replace(/onclick="D/g, '')
+    .replace(/id="Deleterow" /g, '')
+    .replace(/eleterowthis">Delete /g, '')
+    .replace(/Row;/g, '')
     .replace(/<tr>/g, '')
-    .replace(/<\/tr>/g, '\r\n');
-
+    .replace(/<\/tr>/g, '\r\n')
+    .replace(/\t/g, '')
+    .replace(/\n/g, '');
   alert(data);
+  var myLink = document.createElement('a');
+  myLink.Download = 'csvname.xlsm';
+  myLink.href = 'data:application/csv,' + escape(data);
+  myLink.click();
 }
 
 // ************************************
