@@ -138,8 +138,8 @@ def query_csv(request):
       SSD_path= "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
       path_extension = [LS_path, LT_path, SSD_path]
       # comment the first and uncomment the second before uploading
-      # csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
-      csv_base_path = '/lf_hazard/'+year+'/' # Server path
+      csv_base_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path
+      # csv_base_path = '/lf_hazard/'+year+'/' # Server path
 
       # This part helps with telling if you are working on the local or serverpath
       if csv_base_path[:2] == "/h":
@@ -261,7 +261,7 @@ def query_csv(request):
 
               # This part appends the LS value to the point_value being sent 
               # to the Javascript.
-              point_value.append(LS_Dm_IDW)
+              point_value.append(LS_Dm_IDW) #D value
 
               # print str(temp_numerator)
               # print str(temp_denominator)
@@ -292,8 +292,8 @@ def query_csv(request):
                 place +=1
                 
               
-              point_value.append(LT_IDW[0])
-              point_value.append(LT_IDW[1])
+              point_value.append(LT_IDW[0]) #Cetin value
+              point_value.append(LT_IDW[1]) #CSR value
 
             elif ext[:2] == "SS":
               print "Working on SSD file"
@@ -342,10 +342,10 @@ def query_csv(request):
                 SSD_IDW[place] = temp_numerator/temp_denominator
                 place +=1
               
-              point_value.append(SSD_IDW[0])
-              point_value.append(SSD_IDW[1])
-              point_value.append(SSD_IDW[2])
-              point_value.append(SSD_IDW[3])
+              point_value.append(SSD_IDW[0]) #Cetin percent
+              point_value.append(SSD_IDW[1]) #I&Y percent
+              point_value.append(SSD_IDW[2]) #R&S
+              point_value.append(SSD_IDW[3]) #B&T
 
             # Resets the variables dist and quad_line_tracker
             dist = [10000,10000,10000,10000,10000,10000,10000,10000]

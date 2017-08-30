@@ -164,7 +164,7 @@ function submitButton() {
 // ************************************
 // This is the new popup builder
 // ************************************
-function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue) {
+function newgetPopup(coordinate,LogDvalue,Nvalue,CSRvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue) {
   // console.log ("Working on the new popup");
   // console.log (LogDvalue);
   // console.log (CSRvalue);
@@ -174,18 +174,16 @@ function newgetPopup(coordinate,LogDvalue,CSRvalue,Nvalue,RnSvalue,BnTvalue,Ceti
   // console.log (Cetinvalue);
   // console.log (InYvalue);
 
-
   var view = map.getView();
   var viewResolution = view.getResolution();
 
   var dec = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
   var declon = parseFloat(dec[0]).toFixed(5);
   var declat = parseFloat(dec[1]).toFixed(5);
-  
 
   content.innerHTML = '<p><b>Location:</b><br>'+ declon +', ' +declat + '</p>';
-  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>CSR(%)<sup>ref</sup></b>:  ' + (parseFloat(CSRvalue).toFixed(2)) + '</i></p>';
+  content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
@@ -215,13 +213,13 @@ function Add_values(lon,lat,logDvalue,Nvalue,CSRvalue,Cetinvalue,InYvalue,RnSval
   cell1.innerHTML = returnPeriod_global;
   cell2.innerHTML = lon;
   cell3.innerHTML = lat;
-  cell4.innerHTML = (parseFloat(logDvalue).toFixed(4));
+  cell4.innerHTML = (parseFloat(CSRvalue).toFixed(2));
   cell5.innerHTML = (parseFloat(Nvalue).toFixed(2));
-  cell6.innerHTML = (parseFloat(CSRvalue).toFixed(2));
-  cell7.innerHTML = (parseFloat(Cetinvalue).toFixed(2));
-  cell8.innerHTML = (parseFloat(InYvalue).toFixed(2));
-  cell9.innerHTML = (parseFloat(RnSvalue).toFixed(2));
-  cell10.innerHTML = (parseFloat(BnTvalue).toFixed(2));
+  cell6.innerHTML = (parseFloat(RnSvalue).toFixed(2));
+  cell7.innerHTML = (parseFloat(BnTvalue).toFixed(2));
+  cell8.innerHTML = (parseFloat(logDvalue).toFixed(4));
+  cell9.innerHTML = (parseFloat(Cetinvalue).toFixed(2));
+  cell10.innerHTML = (parseFloat(InYvalue).toFixed(2));
   cell11.innerHTML = '<button id="Delete_row" onclick="Delete_row(this)">Delete Row</button>';
 }
 function Delete_row(r) {
@@ -254,15 +252,15 @@ function Download_data(){
     .replace(/<th><i><b>N<sub>req<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g,"N req;")
     .replace(/<th><i><b>D<sub>R\&amp;S<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g,"D R&S;")
     .replace(/<th><i><b>D<sub>B\&amp;T<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g,"D B&T;")
-    .replace(/<th><i><b>\u03B5<sub>v,Cetin<\/sub>\(%\)<sup>ref<\/sup><\/b><\/i><\/th>/g,"\u03B5 Cetin;")
-    .replace(/<th><b>\u03B5<sub>v,I\&amp;Y%<\/sub>\(%\)<sup>ref<\/sup><\/b><\/th>/g,"\u03B5 I&Y;")
+    .replace(/<th><i><b>\u03B5<sub>v,Cetin<\/sub>\(%\)<sup>ref<\/sup><\/b><\/i><\/th>/g,"e* Cetin;")
+    .replace(/<th><b>\u03B5<sub>v,I\&amp;Y%<\/sub>\(%\)<sup>ref<\/sup><\/b><\/th>/g,"e* I&Y;")
     .replace(/<td><b><button id="Download_data" onclick="Download_data\(\)">Download Data<\/button><\/b><\/td>/g,"")
     .replace(/<td><button id="Delete_row" onclick="Delete_row\(this\)">Delete Row<\/button><\/td>/g, '')
     .replace(/<td>/g, '')
     .replace(/<\/td>/g, ';')
     .replace(/\t/g, '')
     .replace(/\n/g, '');
-  alert(data);
+  
   // var data = table.replace(/<thead>/g, '')
   //   .replace(/<\/thead>/g, '')
   //   .replace(/<tbody>/g, '')
@@ -354,6 +352,7 @@ function query_csv(lon, lat, year, state, returnPeriod)
                 var newcoor = ol.proj.transform([Number(lon), Number(lat)], 'EPSG:4326','EPSG:3857');
                 // console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
                 // console.log("Connected to map.js")
+                //newgetPopup(newcoor, LogDvalue, Nvalue, CSR value, Cetin percent, I&Y, R&S, B&T)
                 newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
 
             }
