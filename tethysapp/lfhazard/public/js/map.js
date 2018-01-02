@@ -158,7 +158,13 @@ function submitButton() {
   var newcoor = ol.proj.transform([Number(lat), Number(lon)], 'EPSG:4326','EPSG:3857');
   console.log("Submit click 2: " + newcoor); //This changes lat and long into EPSG:3857
 
-  getPopup(newcoor);
+  if (checkstate(newcoor,states) == true) {
+        getPopup(newcoor);
+      }
+      else{
+        alert ("Please submit coordiantes within selected State boundaries");
+      }
+
   }
 
 // ************************************
@@ -337,6 +343,8 @@ function query_csv(lon, lat, year, state, returnPeriod)
 }
 
 function checkstate(pnt,state_layer){
+  // checkstate takes the coordinates and state layer and checks
+  // where the 
   var check = state_layer.getSource().getFeaturesAtCoordinate(pnt);
   if (check.length == 0){
     return false;

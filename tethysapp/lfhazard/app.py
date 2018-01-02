@@ -26,8 +26,8 @@ class LiquifactionHazardApp(TethysAppBase):
         UrlMap = url_map_maker(self.root_url)
 
         url_maps = (UrlMap(name='home',
-                           url='lfhazard',
-                           controller='lfhazard.controllers.home'),
+                           url='lfhazard/map',
+                           controller='lfhazard.controllers.map'),
                     UrlMap(name='map',
                            url='lfhazard/map',
                            controller='lfhazard.controllers.map'),
