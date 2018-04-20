@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .model import SessionMaker, StreamGage
 from tethys_sdk.gizmos import MapView, MVLayer, MVView
 from tethys_sdk.gizmos import TextInput
 from tethys_sdk.gizmos import SelectInput
@@ -123,7 +122,7 @@ def query_csv(request):
 
       # These are all the values from the javascript
 
-      print request_dict 
+      print (request_dict)
       lon = float(request_dict['lon'])
       lat = float(request_dict['lat'])
       year = request_dict['year']
@@ -149,19 +148,19 @@ def query_csv(request):
 
       # This part helps with telling if you are working on the local or serverpath
       if csv_base_path[:2] == "/h":
-        print "Connected to Local path"
+        print ("Connected to Local path")
       elif csv_base_path[:2] == "/l":
-        print "Connected to Server path"
+        print ("Connected to Server path")
 
       # This loops through the extensions, gets the right files and calculates.
       for extension in path_extension:
         csv_file_path = csv_base_path + extension
         ext = str(extension)
-        print csv_file_path
+        print (csv_file_path)
         # This checks if file exists
         if os.path.isfile(csv_file_path) == True:
-          print "Is a file"
-          print "Now working on: " + csv_file_path
+          print ("Is a file")
+          print ("Now working on: " + csv_file_path)
           
           with open(csv_file_path, 'r') as row:
             next(row) # this skips the first line
@@ -244,9 +243,9 @@ def query_csv(request):
             
             
             # This part calculates the values.
-            print "***********"
+            print ("***********")
             if ext[:2] == "LS":
-              print "Working on LS file"
+              print ("Working on LS file")
               
               i=0
               temp_numerator = 0
@@ -275,7 +274,7 @@ def query_csv(request):
               # print "This is the LS Dm IDW: "+str(LS_Dm_IDW)
 
             elif ext[:2] == "LT":
-              print "Working on LT file"
+              print ("Working on LT file")
               # i, place and v are values to help keep track in loop.
               i=0
               place=0
@@ -303,29 +302,29 @@ def query_csv(request):
               point_value.append(LT_IDW[1]) #CSR value
 
             elif ext[:2] == "SS":
-              print "Working on SSD file"
+              print ("Working on SSD file")
               
-              print "####################"  
-              print "This is the 1st Quadrant"
-              print " This is the 1st distance: "+str(dist[0])
-              print " This is the 2nd distance: "+str(dist[1])
-              print " This is the 1st line: "+str(quad_line_tracker[0])
-              print " This is the 2nd line: "+str(quad_line_tracker[1])
-              print "This is the 2nd Quadrant"
-              print " This is the 1st distance: "+str(dist[2])
-              print " This is the 2nd distance: "+str(dist[3])
-              print " This is the 1st line: "+str(quad_line_tracker[2])
-              print " This is the 2nd line: "+str(quad_line_tracker[3])
-              print "This is the 3rd Quadrant"
-              print " This is the 1st distance: "+str(dist[4])
-              print " This is the 2nd distance: "+str(dist[5])
-              print " This is the 1st line: "+str(quad_line_tracker[4])
-              print " This is the 2nd line: "+str(quad_line_tracker[5])
-              print "This is the 4th Quadrant"
-              print " This is the 1st distance: "+str(dist[6])
-              print " This is the 2nd distance: "+str(dist[7])
-              print " This is the 1st line: "+str(quad_line_tracker[6])
-              print " This is the 2nd line: "+str(quad_line_tracker[7])
+              print ("####################")
+              print ("This is the 1st Quadrant")
+              print (" This is the 1st distance: "+str(dist[0]))
+              print (" This is the 2nd distance: "+str(dist[1]))
+              print (" This is the 1st line: "+str(quad_line_tracker[0]))
+              print (" This is the 2nd line: "+str(quad_line_tracker[1]))
+              print ("This is the 2nd Quadrant")
+              print (" This is the 1st distance: "+str(dist[2]))
+              print (" This is the 2nd distance: "+str(dist[3]))
+              print (" This is the 1st line: "+str(quad_line_tracker[2]))
+              print (" This is the 2nd line: "+str(quad_line_tracker[3]))
+              print ("This is the 3rd Quadrant")
+              print (" This is the 1st distance: "+str(dist[4]))
+              print (" This is the 2nd distance: "+str(dist[5]))
+              print (" This is the 1st line: "+str(quad_line_tracker[4]))
+              print (" This is the 2nd line: "+str(quad_line_tracker[5]))
+              print ("This is the 4th Quadrant")
+              print (" This is the 1st distance: "+str(dist[6]))
+              print (" This is the 2nd distance: "+str(dist[7]))
+              print (" This is the 1st line: "+str(quad_line_tracker[6]))
+              print (" This is the 2nd line: "+str(quad_line_tracker[7]))
                # i, place and v are values to help keep track in loop.
               i=0
               place=0
@@ -357,9 +356,9 @@ def query_csv(request):
             # Resets the variables dist and quad_line_tracker
             dist = [10000,10000,10000,10000,10000,10000,10000,10000]
             quad_line_tracker=[0,0,0,0,0,0,0,0]
-            print "The end of the Line"
+            print ("The end of the Line")
         else:
-          print "Is not a file"
+          print ("Is not a file")
           if ext[:2] == "LS":
             point_value.append("No Answer Yet")
           elif ext[:2] == "LT":
@@ -376,14 +375,14 @@ def query_csv(request):
       # write your logic here to get the value at lon, lat
       
       result["status"] = "success"
-      print "These are the point_values"
-      print point_value
+      print ("These are the point_values")
+      print (point_value)
       result["point_value"] = point_value
     else:
       raise Exception('not a post request!')
   
   except Exception as e:
-    print e.message
+    print (e.message)
     result["status"] = "error"  
   finally:
     return JsonResponse(result)

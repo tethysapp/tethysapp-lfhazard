@@ -6,6 +6,7 @@
 
 {% block app_navigation_items %}
 
+<br>
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#welcome-popup">Instructions</button>
 <p></p>
 <p style="font-size:120%;color:black;">State:</p>
@@ -67,7 +68,6 @@
 {% block app_content %}
 
     <!-- <h1>Liquefaction Hazard Map</h1> -->
-    {% gizmo map_view map_options %}
     <div id="map" class="map"></div>
     <div style="overflow-x:auto;">
       <table id="myTable">
