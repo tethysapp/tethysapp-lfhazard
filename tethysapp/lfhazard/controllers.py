@@ -261,16 +261,15 @@ def query_csv(request):
                 temp_numerator = temp_numerator + temp_numerator_add
                 temp_denominator_add = 1/float(math.pow(dist[i],2))
                 temp_denominator = temp_denominator + temp_denominator_add
-
-              # LS values need to go through log base 10.
-              LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
+              if state == "connecticut":
+                  LS_Dm_IDW = 0
+              else:
+                  # LS values need to go through log base 10.
+                  LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
 
               # This part appends the LS value to the point_value being sent 
               # to the Javascript.
               point_value.append(LS_Dm_IDW) #D value
-
-              # print str(temp_numerator)
-              # print str(temp_denominator)
               # print "This is the LS Dm IDW: "+str(LS_Dm_IDW)
 
             elif ext[:2] == "LT":
