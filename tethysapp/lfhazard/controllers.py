@@ -263,6 +263,8 @@ def query_csv(request):
                 temp_denominator = temp_denominator + temp_denominator_add
               if state == "connecticut":
                   LS_Dm_IDW = 0
+              elif state == "Connecticut":
+                  LS_Dm_IDW = 0
               else:
                   # LS values need to go through log base 10.
                   LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
