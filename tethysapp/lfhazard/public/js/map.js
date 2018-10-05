@@ -170,7 +170,7 @@ function submitButton() {
 // ************************************
 // This is the new popup builder
 // ************************************
-function newgetPopup(coordinate,LogDvalue,Nvalue,CSRvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue) {
+function newgetPopup(coordinate,LogDvalue,Nvalue,CSRvalue,RnSvalue,BnTvalue,Cetinvalue,InYvalue,state) {
   // console.log ("Working on the new popup");
   // console.log (LogDvalue);
   // console.log (CSRvalue);
@@ -192,10 +192,16 @@ function newgetPopup(coordinate,LogDvalue,Nvalue,CSRvalue,RnSvalue,BnTvalue,Ceti
   content.innerHTML += '<p><i><b>N<sub>req</sub><sup>ref</sup></b>:  ' + (parseFloat(Nvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,Cetin</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(RnSvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>&epsilon;<sub>v,I&Y%</sub>(%)<sup>ref</sup></b>:  ' + (parseFloat(BnTvalue).toFixed(2)) + '</i></p>';
-  content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+    if (state == 'Alaska') {
+        content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b> (lateral spread is based on USGS 2002 data):  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+    }
+    else {
+        content.innerHTML += '<p><i><b>Log D<sub>h</sub><sup>ref</sup></b>:  ' + (parseFloat(LogDvalue).toFixed(4)) + '</i></p>';
+    }
   content.innerHTML += '<p><i><b>D<sub>R&S</sub><sup>ref</sup></b>:  ' + (parseFloat(Cetinvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<p><i><b>D<sub>B&T</sub><sup>ref</sup></b>:  ' + (parseFloat(InYvalue).toFixed(2)) + '</i></p>';
   content.innerHTML += '<button id="Add_values" onclick="Add_values('+declon+','+declat+','+LogDvalue+','+Nvalue+','+CSRvalue+','+Cetinvalue+','+InYvalue+','+RnSvalue+','+BnTvalue+')">Add</button>';
+    
   overlay.setPosition(coordinate);
 }
 function Add_values(lon,lat,logDvalue,Nvalue,CSRvalue,Cetinvalue,InYvalue,RnSvalue,BnTvalue){
@@ -323,7 +329,7 @@ function query_csv(lon, lat, year, state, returnPeriod)
                 // console.log("These are the changed coordinates : " + newcoor); //This changes lat and long into EPSG:3857
                 // console.log("Connected to map.js")
                 //newgetPopup(newcoor, LogDvalue, Nvalue, CSR value, Cetin percent, I&Y, R&S, B&T)
-                newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6]);
+                newgetPopup(newcoor,point_value[0],point_value[1],point_value[2],point_value[3],point_value[4],point_value[5],point_value[6],state);
 
             }
             else
