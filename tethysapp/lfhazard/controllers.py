@@ -257,18 +257,18 @@ def query_csv(request):
               for i in range(8):
                 if dist[i] == 10000:
                   continue
-                temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
-                temp_numerator = temp_numerator + temp_numerator_add
-                temp_denominator_add = 1/float(math.pow(dist[i],2))
-                temp_denominator = temp_denominator + temp_denominator_add
-              if state == "connecticut":
-                  LS_Dm_IDW = 0
-              elif state == "Connecticut":
-                  LS_Dm_IDW = 0
-              else:
-                  # LS values need to go through log base 10.
-                  LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
-
+                if((state == "Connecticut" and year == "2014") or (state == "connecticut" and year == "2014")):
+                    temp_numerator_add = float(quad_line_tracker[i][3])/float(math.pow(dist[i],2))
+                    temp_numerator = temp_numerator + temp_numerator_add
+                    temp_denominator_add = 1/float(math.pow(dist[i],2))
+                    temp_denominator = temp_denominator + temp_denominator_add
+                    LS_Dm_IDW = temp_numerator/temp_denominator
+                else:
+                    temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
+                    temp_numerator = temp_numerator + temp_numerator_add
+                    temp_denominator_add = 1/float(math.pow(dist[i],2))
+                    temp_denominator = temp_denominator + temp_denominator_add
+                    LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
               # This part appends the LS value to the point_value being sent 
               # to the Javascript.
               point_value.append(LS_Dm_IDW) #D value
@@ -346,7 +346,10 @@ def query_csv(request):
                   temp_numerator = temp_numerator + temp_numerator_add
                   temp_denominator_add = 1/float(math.pow(dist[i],2))
                   temp_denominator = temp_denominator + temp_denominator_add
-                SSD_IDW[place] = temp_numerator/temp_denominator
+                if(temp_numerator == 0 and temp_denominator == 0):
+                    SSD_IDW[place] = 0
+                else:
+                    SSD_IDW[place] = temp_numerator/temp_denominator
                 place +=1
               
               point_value.append(SSD_IDW[0]) #Cetin percent
