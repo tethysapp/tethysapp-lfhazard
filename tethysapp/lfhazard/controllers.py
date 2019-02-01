@@ -11,7 +11,7 @@ import json
 import os
 import math
 
-@login_required()
+# @login_required()
 def home(request):
     """
     Controller for the app home page.
@@ -21,7 +21,7 @@ def home(request):
     return render(request, 'lfhazard/home.html', context)
 
 
-@login_required()
+# @login_required()
 def map(request):
     """
     Controller for map page.
@@ -86,7 +86,7 @@ def map(request):
     return render(request, 'lfhazard/map.html', context)
 
 
-@login_required
+# @login_required
 def documentation(request):
 
     # Create template context dictionary
@@ -96,6 +96,10 @@ def documentation(request):
 
 
 def query_csv(request):
+  """
+  From the lon and lat interpolates from 4 of the closests points from a csv files,
+  the LD, LS and SSD values.
+  """
   result = {}
   dist11 = 10000
   dist12 = 10000
@@ -376,7 +380,6 @@ def query_csv(request):
 
 
 
-      # write your logic here to get the value at lon, lat
       
       result["status"] = "success"
       print ("These are the point_values")
