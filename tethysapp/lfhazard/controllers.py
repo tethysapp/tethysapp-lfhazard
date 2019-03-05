@@ -142,7 +142,8 @@ def query_csv(request):
       path_extension = [LS_path, LT_path, SSD_path]
 
       # checks if path to the files is right
-      temp_path = '/home/tethys/tethysdev/csv/'+year+'/' # Local path 
+      temp_path = '/home/student/tethysdev/lf_hazard/'+year+'/' # Local path
+      print (temp_path + LS_path)
       if os.path.isfile(temp_path + LS_path) == True:
         csv_base_path = temp_path
         # print "local path: " + csv_base_path
@@ -151,6 +152,7 @@ def query_csv(request):
         # print "server path: " + csv_base_path
 
       # This part helps with telling if you are working on the local or serverpath
+      print ("Current Path: " + os.getcwd())
       if csv_base_path[:2] == "/h":
         print ("Connected to Local path")
       elif csv_base_path[:2] == "/l":
@@ -267,12 +269,17 @@ def query_csv(request):
                     temp_denominator_add = 1/float(math.pow(dist[i],2))
                     temp_denominator = temp_denominator + temp_denominator_add
                     LS_Dm_IDW = temp_numerator/temp_denominator
+
                 else:
-                    temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
+                    temp_numerator_add = float(quad_line_tracker[i][3])/float(math.pow(dist[i],2))
                     temp_numerator = temp_numerator + temp_numerator_add
                     temp_denominator_add = 1/float(math.pow(dist[i],2))
                     temp_denominator = temp_denominator + temp_denominator_add
-                    LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
+                    try:
+                        LS_Dm_IDW = math.log(temp_numerator/temp_denominator,10)
+                    except:
+                        LS_Dm_IDW = temp_numerator/temp_denominator
+                    print("LS_Dm_IDW: " + str(LS_Dm_IDW))
               # This part appends the LS value to the point_value being sent 
               # to the Javascript.
               point_value.append(LS_Dm_IDW) #D value
