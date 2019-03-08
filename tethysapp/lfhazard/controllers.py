@@ -263,15 +263,15 @@ def query_csv(request):
               for i in range(8):
                 if dist[i] == 10000:
                   continue
-                if((state == "Connecticut" and year == "2014") or (state == "connecticut" and year == "2014")):
+                # if((state == "Connecticut" and year == "2014") or (state == "connecticut" and year == "2014")):
+                  if((year == "2014")):
                     temp_numerator_add = float(quad_line_tracker[i][3])/float(math.pow(dist[i],2))
                     temp_numerator = temp_numerator + temp_numerator_add
                     temp_denominator_add = 1/float(math.pow(dist[i],2))
                     temp_denominator = temp_denominator + temp_denominator_add
                     LS_Dm_IDW = temp_numerator/temp_denominator
-
                 else:
-                    temp_numerator_add = float(quad_line_tracker[i][3])/float(math.pow(dist[i],2))
+                    temp_numerator_add = float(quad_line_tracker[i][2])/float(math.pow(dist[i],2))
                     temp_numerator = temp_numerator + temp_numerator_add
                     temp_denominator_add = 1/float(math.pow(dist[i],2))
                     temp_denominator = temp_denominator + temp_denominator_add
