@@ -40,7 +40,7 @@ var point_value;
 var row_counter = 0;
 
 function update() {
-    console.log("hello");
+    // console.log("hello");
     var returnPeriod = document.getElementById('select_returnPeriod').value;
     var state = document.getElementById('select_state').value;
     var modelYear = document.getElementById('select_modelYear').value;
@@ -153,22 +153,20 @@ function update() {
 // This function is the button 
 // ************************************
 function submitButton() {
-    console.log("submitButton works")
     var lat = document.getElementById('lat-input').value;
     var lon = document.getElementById('lon-input').value;
 
-
     var coordinate = [Number(lat), Number(lon)];
-    console.log("Submit click 1: " + coordinate);
-    console.log("Type of coordinate: " + typeof coordiante);
+    // console.log("Submit click 1: " + coordinate);
+    // console.log("Type of coordinate: " + typeof coordiante);
 
     var newcoor = ol.proj.transform([Number(lat), Number(lon)], 'EPSG:4326', 'EPSG:3857');
-    console.log("Submit click 2: " + newcoor); //This changes lat and long into EPSG:3857
+    // console.log("Submit click 2: " + newcoor); //This changes lat and long into EPSG:3857
 
     if (checkstate(newcoor, states) == true) {
         getPopup(newcoor);
     } else {
-        alert("Please submit coordiantes within selected State boundaries");
+        alert("Please submit coordinates within selected State boundaries");
     }
 
 }
@@ -177,15 +175,6 @@ function submitButton() {
 // This is the new popup builder
 // ************************************
 function newgetPopup(coordinate, LogDvalue, Nvalue, CSRvalue, RnSvalue, BnTvalue, Cetinvalue, InYvalue, state) {
-    // console.log ("Working on the new popup");
-    // console.log (LogDvalue);
-    // console.log (CSRvalue);
-    // console.log (Nvalue);
-    // console.log (RnSvalue);
-    // console.log (BnTvalue);
-    // console.log (Cetinvalue);
-    // console.log (InYvalue);
-
     var view = map.getView();
     var viewResolution = view.getResolution();
 
@@ -213,7 +202,7 @@ function newgetPopup(coordinate, LogDvalue, Nvalue, CSRvalue, RnSvalue, BnTvalue
 function Add_values(lon, lat, logDvalue, Nvalue, CSRvalue, Cetinvalue, InYvalue, RnSvalue, BnTvalue) {
     var table = document.getElementById("myTable");
     row_counter = row_counter + 1;
-    console.log(row_counter);
+    // console.log(row_counter);
     var row = table.insertRow(1);
     var cell0 = row.insertCell(0);
     var cell1 = row.insertCell(1);
@@ -248,43 +237,29 @@ function Delete_row(r) {
 }
 
 function Download_data() {
-    var table = document.getElementById("myTable").innerHTML;
-    var ref = "ref";
-    ref = ref.sup();
-    var hl = "h";
-    hl = hl.sub();
-    var CSR = "CSR(%)" + ref + ';';
-    var data = table.replace(/<thead>/g, '')
-        .replace(/<\/thead>/g, '')
-        .replace(/<tbody>/g, '')
-        .replace(/<\/tbody>/g, '')
-        .replace(/<tr>/g, '')
-        .replace(/<\/tr>/g, '\r\n')
-        .replace(/          /g, "")
-        .replace(/        /g, "")
-        .replace(/      /g, "")
-        .replace(/<th><i><b>Year<\/b><\/i><\/th>/g, "Year;")
-        .replace(/<th><i><b>Return Period<\/b><\/i><\/th>/g, "Return Period;")
-        .replace(/<th><i><b>Longitude<\/b><\/i><\/th>/g, "Longitude;")
-        .replace(/<th><i><b>Latitude<\/b><\/i><\/th>/g, "Latitude;")
-        .replace(/<th><i><b>Log D<sub>h<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g, 'Log D;')
-        .replace(/<th><i><b>CSR\(%\)<sup>ref<\/sup><\/b><\/i><\/th>/g, "CSR(%);")
-        .replace(/<th><i><b>N<sub>req<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g, "N req;")
-        .replace(/<th><i><b>D<sub>R\&amp;S<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g, "D R&S;")
-        .replace(/<th><i><b>D<sub>B\&amp;T<\/sub><sup>ref<\/sup><\/b><\/i><\/th>/g, "D B&T;")
-        .replace(/<th><i><b>\u03B5<sub>v,Cetin<\/sub>\(%\)<sup>ref<\/sup><\/b><\/i><\/th>/g, "e* Cetin;")
-        .replace(/<th><b>\u03B5<sub>v,I\&amp;Y%<\/sub>\(%\)<sup>ref<\/sup><\/b><\/th>/g, "e* I&Y;")
-        .replace(/<td><b><button id="Download_data" onclick="Download_data\(\)">Download Data<\/button><\/b><\/td>/g, "")
-        .replace(/<td><button id="Delete_row" onclick="Delete_row\(this\)">Delete Row<\/button><\/td>/g, '')
-        .replace(/<td>/g, '')
-        .replace(/<\/td>/g, ';')
-        .replace(/\t/g, '')
-        .replace(/\n/g, '');
-    alert("When opening downloaded csv file, be sure to seperate columns by ';'");
-    var myLink = document.createElement('a');
-    myLink.Download = 'csvname.xlsm';
-    myLink.href = 'data:application/csv,' + escape(data);
-    myLink.click();
+    let tabledata = [];
+    var rows = document.querySelectorAll("table tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+
+        for (var j = 0; j < cols.length; j++) {
+            if (cols[j].innerText === 'Delete Row' || cols[j].innerText === 'Download Data') {
+                continue
+            }
+            row.push(cols[j].innerText);
+        }
+
+        tabledata.push(row.join(","));
+    }
+    let csv = "data:text/csv;charset=utf-8," + tabledata.join("\n");
+    let link = document.createElement('a');
+    link.setAttribute('href', encodeURI(csv));
+    link.setAttribute('target', '_blank');
+    link.setAttribute('download',  'liquifaction_parameters.csv');
+    document.body.appendChild(link);
+    link.click();
+    $("#a").remove();
 }
 
 // ************************************
@@ -354,7 +329,7 @@ function checkstate(pnt, state_layer) {
     // checkstate takes the coordinates and state layer and checks
     // where the
     var check = state_layer.getSource().getFeaturesAtCoordinate(pnt);
-    if (check.length == 0) {
+    if (check.length === 0) {
         return false;
     } else {
         return true;
@@ -476,7 +451,7 @@ $(document).ready(function () {
     });
 
     $('#select_returnPeriod').change(function () {
-        console.log('Return Period changed');
+        // console.log('Return Period changed');
         getPopup(onclickcoor);
     });
 
@@ -497,15 +472,11 @@ $(document).ready(function () {
 
     map.on('singleclick', function (evt) {
         if (returnPeriod != "" && state != "" && modelYear != "") {
-            onclickcoor = evt.coordinate;
-            console.log("On click: " + onclickcoor);
-            if (checkstate(onclickcoor, states) == true) {
-                getPopup(onclickcoor);
+            if (checkstate(evt.coordinate, states)) {
+                getPopup(evt.coordinate);
             } else {
                 alert("Please click within selected State boundaries");
             }
-
-
         } else {
             alert("No parameters provided");
         }
