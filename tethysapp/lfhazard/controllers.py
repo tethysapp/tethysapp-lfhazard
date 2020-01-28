@@ -9,6 +9,8 @@ import json
 import os
 import math
 
+from .app import LiquifactionHazardApp as App
+
 
 def home(request):
     """
@@ -92,10 +94,6 @@ def home(request):
     return render(request, 'lfhazard/map.html', context)
 
 
-def documentation(request):
-    return render(request, 'lfhazard/documentation.html', {})
-
-
 def query_csv(request):
     """
     From the lon and lat interpolates from 4 of the closests points from a csv files,
@@ -117,7 +115,7 @@ def query_csv(request):
     # quad_line_tracker will contain the values of the point closest to the
     # cooridnates put in.
     quad_line_tracker = [0, 0, 0, 0, 0, 0, 0, 0]
-    # temp_numerator is a temporary variable for calcuations
+    # temp_numerator is a temporary variable for calculations
     temp_numerator = 1
     # point_value will contain the calculated variables that will be
     # brought to the js file.
@@ -127,7 +125,6 @@ def query_csv(request):
             request_dict = json.loads(request.body)
 
             # These are all the values from the javascript
-
             print(request_dict)
             lon = float(request_dict['lon'])
             lat = float(request_dict['lat'])
@@ -135,38 +132,22 @@ def query_csv(request):
             state = request_dict['state']
             returnPeriod = request_dict['returnPeriod']
 
-            # this finds the correct csv files given the parameters
-
             # path extentions
             LS_path = "LS-" + returnPeriod + '_States/LS-' + returnPeriod + '_' + state + '.csv'
             LT_path = "LT-" + returnPeriod + '_States/LT-' + returnPeriod + '_' + state + '.csv'
             SSD_path = "SSD-" + returnPeriod + '_States/SSD-' + returnPeriod + '_' + state + '.csv'
             path_extension = [LS_path, LT_path, SSD_path]
 
-            # checks if path to the files is right
-            temp_path = '/home/student/tethysdev/lf_hazard/' + year + '/'  # Local path
-            print(temp_path + LS_path)
-            if os.path.isfile(temp_path + LS_path) == True:
-                csv_base_path = temp_path
-                # print "local path: " + csv_base_path
-            else:
-                csv_base_path = '/lf_hazard/' + year + '/'  # Server
-                # print "server path: " + csv_base_path
-
-            # This part helps with telling if you are working on the local or serverpath
-            print("Current Path: " + os.getcwd())
-            if csv_base_path[:2] == "/h":
-                print("Connected to Local path")
-            elif csv_base_path[:2] == "/l":
-                print("Connected to Server path")
+            csv_base_path = os.path.join(App.get_app_workspace().path, year)
+            print(csv_base_path)
 
             # This loops through the extensions, gets the right files and calculates.
             for extension in path_extension:
-                csv_file_path = csv_base_path + extension
+                csv_file_path = os.path.join(csv_base_path, extension)
                 ext = str(extension)
                 print(csv_file_path)
                 # This checks if file exists
-                if os.path.isfile(csv_file_path) == True:
+                if os.path.isfile(csv_file_path):
                     print("Is a file")
                     print("Now working on: " + csv_file_path)
 
@@ -191,7 +172,7 @@ def query_csv(request):
                                 if temp_dist <= dist[1]:
                                     dist[1] = temp_dist
                                     quad_line_tracker[1] = line
-                                if (temp_dist <= dist[0] and temp_dist <= dist[1]):
+                                if temp_dist <= dist[0] and temp_dist <= dist[1]:
                                     dist[1] = dist[0]
                                     dist[0] = temp_dist
                                     quad_line_tracker[1] = quad_line_tracker[0]
@@ -209,7 +190,7 @@ def query_csv(request):
                                 if temp_dist <= dist[3]:
                                     dist[3] = temp_dist
                                     quad_line_tracker[3] = line
-                                if (temp_dist <= dist[2] and temp_dist <= dist[3]):
+                                if temp_dist <= dist[2] and temp_dist <= dist[3]:
                                     dist[3] = dist[2]
                                     dist[2] = temp_dist
                                     quad_line_tracker[3] = quad_line_tracker[2]
@@ -227,7 +208,7 @@ def query_csv(request):
                                 if temp_dist <= dist[5]:
                                     dist[5] = temp_dist
                                     quad_line_tracker[5] = line
-                                if (temp_dist <= dist[4] and temp_dist <= dist[5]):
+                                if temp_dist <= dist[4] and temp_dist <= dist[5]:
                                     dist[5] = dist[4]
                                     dist[4] = temp_dist
                                     quad_line_tracker[5] = quad_line_tracker[4]
@@ -245,7 +226,7 @@ def query_csv(request):
                                 if temp_dist <= dist[7]:
                                     dist[7] = temp_dist
                                     quad_line_tracker[7] = line
-                                if (temp_dist <= dist[6] and temp_dist <= dist[7]):
+                                if temp_dist <= dist[6] and temp_dist <= dist[7]:
                                     dist[7] = dist[6]
                                     dist[6] = temp_dist
                                     quad_line_tracker[7] = quad_line_tracker[6]
@@ -267,7 +248,7 @@ def query_csv(request):
                                 if dist[i] == 10000:
                                     continue
                                     # if((state == "Connecticut" and year == "2014") or (state == "connecticut" and year == "2014")):
-                                    if ((year == "2014")):
+                                    if year == "2014":
                                         temp_numerator_add = float(quad_line_tracker[i][3]) / float(
                                             math.pow(dist[i], 2))
                                         temp_numerator = temp_numerator + temp_numerator_add
@@ -317,29 +298,30 @@ def query_csv(request):
                             point_value.append(LT_IDW[1])  # CSR value
 
                         elif ext[:2] == "SS":
-                            print("Working on SSD file")
+                            # print("Working on SSD file")
+                            # print("####################")
+                            # print("This is the 1st Quadrant")
+                            # print(" This is the 1st distance: " + str(dist[0]))
+                            # print(" This is the 2nd distance: " + str(dist[1]))
+                            # print(" This is the 1st line: " + str(quad_line_tracker[0]))
+                            # print(" This is the 2nd line: " + str(quad_line_tracker[1]))
+                            # print("This is the 2nd Quadrant")
+                            # print(" This is the 1st distance: " + str(dist[2]))
+                            # print(" This is the 2nd distance: " + str(dist[3]))
+                            # print(" This is the 1st line: " + str(quad_line_tracker[2]))
+                            # print(" This is the 2nd line: " + str(quad_line_tracker[3]))
+                            # print("This is the 3rd Quadrant")
+                            # print(" This is the 1st distance: " + str(dist[4]))
+                            # print(" This is the 2nd distance: " + str(dist[5]))
+                            # print(" This is the 1st line: " + str(quad_line_tracker[4]))
+                            # print(" This is the 2nd line: " + str(quad_line_tracker[5]))
+                            # print("This is the 4th Quadrant")
+                            # print(" This is the 1st distance: " + str(dist[6]))
+                            # print(" This is the 2nd distance: " + str(dist[7]))
+                            # print(" This is the 1st line: " + str(quad_line_tracker[6]))
+                            # print(" This is the 2nd line: " + str(quad_line_tracker[7]))
 
-                            print("####################")
-                            print("This is the 1st Quadrant")
-                            print(" This is the 1st distance: " + str(dist[0]))
-                            print(" This is the 2nd distance: " + str(dist[1]))
-                            print(" This is the 1st line: " + str(quad_line_tracker[0]))
-                            print(" This is the 2nd line: " + str(quad_line_tracker[1]))
-                            print("This is the 2nd Quadrant")
-                            print(" This is the 1st distance: " + str(dist[2]))
-                            print(" This is the 2nd distance: " + str(dist[3]))
-                            print(" This is the 1st line: " + str(quad_line_tracker[2]))
-                            print(" This is the 2nd line: " + str(quad_line_tracker[3]))
-                            print("This is the 3rd Quadrant")
-                            print(" This is the 1st distance: " + str(dist[4]))
-                            print(" This is the 2nd distance: " + str(dist[5]))
-                            print(" This is the 1st line: " + str(quad_line_tracker[4]))
-                            print(" This is the 2nd line: " + str(quad_line_tracker[5]))
-                            print("This is the 4th Quadrant")
-                            print(" This is the 1st distance: " + str(dist[6]))
-                            print(" This is the 2nd distance: " + str(dist[7]))
-                            print(" This is the 1st line: " + str(quad_line_tracker[6]))
-                            print(" This is the 2nd line: " + str(quad_line_tracker[7]))
+
                             # i, place and v are values to help keep track in loop.
                             i = 0
                             place = 0
@@ -389,14 +371,14 @@ def query_csv(request):
                         point_value.append("No Answer Yet")
 
             result["status"] = "success"
-            print("These are the point_values")
-            print(point_value)
+            # print("These are the point_values")
+            # print(point_value)
             result["point_value"] = point_value
         else:
             raise Exception('not a post request!')
 
     except Exception as e:
-        print(e.message)
+        # print(e.message)
         result["status"] = "error"
     finally:
         return JsonResponse(result)
