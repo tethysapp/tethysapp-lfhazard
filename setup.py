@@ -14,13 +14,13 @@ dependencies = []
 
 setup(
     name=release_package,
-    version="'0.1'",
-    tags='"Liquifaction", "Geotech"',
-    description='"Liquifaction Hazard Lookup"',
+    version="0.2",
+    tags='Liquifaction, Geotech',
+    description='Liquifaction Hazard Lookup',
     long_description='',
     keywords='',
-    author='"Kevin Liang and Tylor Bayer"',
-    author_email='"tylor.bayer@gmail.com"',
+    author='Kevin Liang, Tylor Bayer, Riley Hales',
+    author_email='',
     url='',
     license='',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),

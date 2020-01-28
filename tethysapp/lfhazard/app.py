@@ -17,25 +17,26 @@ class LiquifactionHazardApp(TethysAppBase):
     enable_feedback = False
     feedback_emails = []
 
-        
     def url_maps(self):
         """
         Add controllers
         """
-        UrlMap = url_map_maker(self.root_url)
+        urlmap = url_map_maker(self.root_url)
 
-        url_maps = (UrlMap(name='home',
-                           url='lfhazard/map',
-                           controller='lfhazard.controllers.map'),
-                    UrlMap(name='map',
-                           url='lfhazard/map',
-                           controller='lfhazard.controllers.map'),
-                    UrlMap(name='documentation',
-                           url='lfhazard/documentation',
-                           controller='lfhazard.controllers.documentation'),
-                     UrlMap(name='query_csv',
-                           url='lfhazard/query-csv',
-                           controller='lfhazard.controllers.query_csv')
+        return (
+            urlmap(
+                name='home',
+                url='lfhazard/map',
+                controller='lfhazard.controllers.home'
+            ),
+            urlmap(
+                name='documentation',
+                url='lfhazard/documentation',
+                controller='lfhazard.controllers.documentation'
+            ),
+            urlmap(
+                name='query_csv',
+                url='lfhazard/query-csv',
+                controller='lfhazard.controllers.query_csv'
+            ),
         )
-
-        return url_maps
