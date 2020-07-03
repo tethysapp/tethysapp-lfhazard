@@ -1,3 +1,4 @@
 .idea
 /tethysapp_lfhazard.egg-info/
 *.pyc
+.DS_Store

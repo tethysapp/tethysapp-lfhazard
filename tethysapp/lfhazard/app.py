@@ -35,8 +35,8 @@ class LiquefactionHazardApp(TethysAppBase):
                 controller='lfhazard.controllers.get_geojson'
             ),
             urlmap(
-                name='query_csv',
-                url='lfhazard/query-csv',
+                name='querycsv',
+                url='lfhazard/querycsv',
                 controller='lfhazard.controllers.query_csv'
             ),
         )

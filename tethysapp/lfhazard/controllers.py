@@ -114,15 +114,14 @@ def query_csv(request):
     # brought to the js file.
     point_value = []
     try:
-        request_dict = json.loads(request.body)
+        lon = float(request.GET['lon'])
+        lat = float(request.GET['lat'])
+        year = request.GET['year']
+        state = request.GET['state']
+        returnPeriod = request.GET['returnPeriod']
+        model = request.GET['model']
 
-        # These are all the values from the javascript
-        print(request_dict)
-        lon = float(request_dict['lon'])
-        lat = float(request_dict['lat'])
-        year = request_dict['year']
-        state = request_dict['state']
-        returnPeriod = request_dict['returnPeriod']
+        csv_base_path = os.path.join(App.get_app_workspace().path, model)
 
         # path extentions
         LS_path = "LS-" + returnPeriod + '/LS-' + returnPeriod + '_' + state + '.csv'
@@ -130,12 +129,11 @@ def query_csv(request):
         SSD_path = "SSD-" + returnPeriod + '/SSD-' + returnPeriod + '_' + state + '.csv'
         path_extension = [LS_path, LT_path, SSD_path]
 
-        csv_base_path = os.path.join(App.get_app_workspace().path, year)
         print(csv_base_path)
 
         # This loops through the extensions, gets the right files and calculates.
         for extension in path_extension:
-            csv_file_path = os.path.join(csv_base_path, extension)
+            csv_file_path = os.path.join(csv_base_path, year, extension)
             ext = str(extension)
             print(csv_file_path)
             # This checks if file exists

@@ -13,34 +13,34 @@ html, body, #app-content, #inner-app-content, #outer-container, #map {
     height: 100%;
 }
 
-#myTable {
+.lftable {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#myTable td, #myTable th {
+.lftable td, .lftable th {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-#myTable td:last-child {
+.lftable td:last-child {
     border: none;
     flex: 1;
     background-color: #ffffff;
 }
 
-#myTable tr:nth-child(even) {
+.lftable tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-#myTable tr:last-child {
+.lftable tr:last-child {
     border: none;
     flex: 1;
     background-color: #ffffff;
 }
 
-#myTable th {
+.lftable th {
     padding-top: 12px;
     padding-bottom: 12px;
     padding-left: 12px;
