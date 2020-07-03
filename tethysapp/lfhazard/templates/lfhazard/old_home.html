@@ -1,0 +1,24 @@
+{% extends "lfhazard/base.html" %}
+
+{% block app_navigation_items %}
+  
+{% endblock %}
+
+{% block app_content %}
+  <h1>Welcome to the Liquefaction Hazard App</h1>
+  <p>Click on 'Go To Map' below to start the lookup process.</p>
+  <p>Liquefaction is loose soil that has been saturated with water that
+behaves like a liquid when disturbed by an earthquake. This can cause
+many problems to structures. To assist geotechnical engineer in
+identifying hazardous liquefaction areas, this app has been developed.
+This app provides hazardous liquefaction values include: Triggering,
+Lat Spread, Solid Surface Displacement, and Settlement. Values have
+been calculated by using the kriging or Gaussian process regression.
+  </p>
+  <p>2014 Data is available.</p>
+  <br><br>
+  <a href="{% url 'lfhazard:map' %}" class="btn btn-default">Go To Map</a>
+{% endblock %}
+
+{% block app_actions %}
+{% endblock %}

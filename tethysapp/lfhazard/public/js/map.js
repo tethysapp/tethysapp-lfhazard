@@ -41,9 +41,9 @@ var row_counter = 0;
 
 function update() {
     // console.log("hello");
-    var returnPeriod = document.getElementById('select_returnPeriod').value;
-    var state = document.getElementById('select_state').value;
-    var modelYear = document.getElementById('select_modelYear').value;
+    var returnPeriod = $('#select_return_period').val();
+    var state = $('#select_state').val();
+    var modelYear = document.getElementById('select_year').value;
     returnPeriod_global = returnPeriod;
     state_global = state;
     modelYear_global = modelYear;
@@ -354,9 +354,9 @@ function getCookie(name) {
 
 
 $(document).ready(function () {
-    var returnPeriod = document.getElementById('select_returnPeriod').value;
-    var state = document.getElementById('select_state').value;
-    var modelYear = document.getElementById('select_modelYear').value;
+    var returnPeriod = $('#select_return_period').val();
+    var state = $('#select_state').val();
+    var modelYear = document.getElementById('select_year').value;
     var onclickcoor;
 
     /**
@@ -408,12 +408,12 @@ $(document).ready(function () {
     };
 
     var select_state = document.getElementById('select_state');
-    var select_modelYear = document.getElementById('select_modelYear');
+    var select_year = document.getElementById('select_year');
 
     //on change is a good event for this because you are guarenteed the value is different
     $('#select_state').change(function () {
         map.removeLayer(map.getLayers().item(1)); //This is what removes the state layer
-        var state = document.getElementById('select_state').value;
+        var state = $('#select_state').val();
         console.log("state selected: " + state);
         states = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -428,8 +428,8 @@ $(document).ready(function () {
         var ex = states.getSource().getExtent()
         map.getView().fit(state_extent[state], map.getSize());
         //This part changes the Year option
-        //clear out select_modelYear
-        select_modelYear.length = 0;
+        //clear out select_year
+        select_year.length = 0;
         //get the selected value from A
         var _val = this.options[this.selectedIndex].value;
         //loop through bOption at the selected value
@@ -440,17 +440,17 @@ $(document).ready(function () {
             op.value = bOptions[_val][i];
             //set the display label
             op.text = bOptions[_val][i];
-            //append it to select_modelYear
-            select_modelYear.appendChild(op);
+            //append it to select_year
+            select_year.appendChild(op);
         }
     });
 
-    $('#select_modelYear').change(function () {
-        select_modelYear = document.getElementById('select_modelYear');
+    $('#select_year').change(function () {
+        select_year = document.getElementById('select_year');
         getPopup(onclickcoor);
     });
 
-    $('#select_returnPeriod').change(function () {
+    $('#select_return_period').change(function () {
         // console.log('Return Period changed');
         getPopup(onclickcoor);
     });
