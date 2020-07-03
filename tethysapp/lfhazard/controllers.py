@@ -233,7 +233,6 @@ def query_csv(request):
                                     quad_line_tracker[6] = line
 
                         # This part calculates the values.
-                        print("***********")
                         if ext[:2] == "LS":
                             print("Working on LS file")
 
@@ -298,30 +297,6 @@ def query_csv(request):
                             point_value.append(LT_IDW[1])  # CSR value
 
                         elif ext[:2] == "SS":
-                            # print("Working on SSD file")
-                            # print("####################")
-                            # print("This is the 1st Quadrant")
-                            # print(" This is the 1st distance: " + str(dist[0]))
-                            # print(" This is the 2nd distance: " + str(dist[1]))
-                            # print(" This is the 1st line: " + str(quad_line_tracker[0]))
-                            # print(" This is the 2nd line: " + str(quad_line_tracker[1]))
-                            # print("This is the 2nd Quadrant")
-                            # print(" This is the 1st distance: " + str(dist[2]))
-                            # print(" This is the 2nd distance: " + str(dist[3]))
-                            # print(" This is the 1st line: " + str(quad_line_tracker[2]))
-                            # print(" This is the 2nd line: " + str(quad_line_tracker[3]))
-                            # print("This is the 3rd Quadrant")
-                            # print(" This is the 1st distance: " + str(dist[4]))
-                            # print(" This is the 2nd distance: " + str(dist[5]))
-                            # print(" This is the 1st line: " + str(quad_line_tracker[4]))
-                            # print(" This is the 2nd line: " + str(quad_line_tracker[5]))
-                            # print("This is the 4th Quadrant")
-                            # print(" This is the 1st distance: " + str(dist[6]))
-                            # print(" This is the 2nd distance: " + str(dist[7]))
-                            # print(" This is the 1st line: " + str(quad_line_tracker[6]))
-                            # print(" This is the 2nd line: " + str(quad_line_tracker[7]))
-
-
                             # i, place and v are values to help keep track in loop.
                             i = 0
                             place = 0
@@ -371,14 +346,11 @@ def query_csv(request):
                         point_value.append("No Answer Yet")
 
             result["status"] = "success"
-            # print("These are the point_values")
-            # print(point_value)
             result["point_value"] = point_value
         else:
             raise Exception('not a post request!')
 
     except Exception as e:
-        # print(e.message)
         result["status"] = "error"
     finally:
         return JsonResponse(result)

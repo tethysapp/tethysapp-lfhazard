@@ -1,35 +1,31 @@
-import os
-import sys
-from setuptools import setup, find_packages
-from tethys_apps.app_installation import custom_develop_command, custom_install_command
+from setuptools import setup, find_namespace_packages
+from tethys_apps.app_installation import find_resource_files
 
-### Apps Definition ###
+# -- Apps Definition -- #
 app_package = 'lfhazard'
 release_package = 'tethysapp-' + app_package
-app_class = 'lfhazard.app:LiquifactionHazardApp'
-app_package_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tethysapp', app_package)
 
-### Python Dependencies ###
+# -- Python Dependencies -- #
 dependencies = []
+
+# -- Get Resource File -- #
+resource_files = find_resource_files('tethysapp/' + app_package + '/templates', 'tethysapp/' + app_package)
+resource_files += find_resource_files('tethysapp/' + app_package + '/public', 'tethysapp/' + app_package)
+resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces', 'tethysapp/' + app_package)
 
 setup(
     name=release_package,
-    version="0.2",
-    tags='Liquifaction, Geotech',
-    description='Liquifaction Hazard Lookup',
+    version='0.3',
+    description='Liquefaction Hazard Lookup',
     long_description='',
     keywords='',
-    author='Kevin Liang, Tylor Bayer, Riley Hales',
+    author='Riley Hales, Kevin Liang, Tylor Bayer',
     author_email='',
     url='',
-    license='',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    namespace_packages=['tethysapp', 'tethysapp.' + app_package],
+    license='MIT',
+    packages=find_namespace_packages(),
+    package_data={'': resource_files},
     include_package_data=True,
     zip_safe=False,
     install_requires=dependencies,
-    cmdclass={
-        'install': custom_install_command(app_package, app_package_dir, dependencies),
-        'develop': custom_develop_command(app_package, app_package_dir, dependencies)
-    }
 )
