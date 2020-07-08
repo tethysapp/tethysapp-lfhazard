@@ -1,4 +1,11 @@
-.idea
-/tethysapp_lfhazard.egg-info/
+*.pydevproject
+*.project
+*.egg-info
+*.class
+*.pyo
 *.pyc
-.DS_Store
+*.db
+*.sqlite
+*.DS_Store
+.idea/
+services.yml

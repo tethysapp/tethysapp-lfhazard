@@ -7,21 +7,17 @@ import json
 import os
 import math
 
-from .app import LiquefactionHazardApp as App
+import pandas as pd
+from shapely.geometry import Point, MultiPoint
+from shapely.ops import nearest_points
+
+from .app import Lfhazard as App
 
 
 def home(request):
     """
     Controller for map page.
     """
-
-    # Default value for name
-    state = ''
-    lat = ''
-    lon = ''
-    modelYear = ''
-    returnPeriod = ''
-
     # Define Gizmo Options
     select_model = SelectInput(
         display_text='Model Type:',
@@ -31,14 +27,14 @@ def home(request):
         initial=('SPT (Standard Penetration Test)', 'spt'),
     )
     select_year = SelectInput(
-        display_text='Model Year:',
+        display_text='Model/Data Year:',
         name='select_year',
         multiple=False,
-        options=[(2008, 2008), (2014, 2014)],
-        initial=[(2008, 2008)]
+        options=[(2014, 2014), (2008, 2008)],
+        initial=[(2014, 2014)]
     )
     select_return_period = SelectInput(
-        display_text='Return Period:',
+        display_text='Return Period (years):',
         name='select_return_period',
         multiple=False,
         options=[('475', 475), ('1033', 1033), ('2475', 2475)],
@@ -61,11 +57,11 @@ def home(request):
     )
 
     text_input_lat = TextInput(
-        display_text='Longitude',
+        display_text='Latitude',
         name='lat-input'
     )
     text_input_lon = TextInput(
-        display_text='Latitude',
+        display_text='Longitude',
         name='lon-input'
     )
 
@@ -92,48 +88,90 @@ def query_csv(request):
     From the lon and lat interpolates from 4 of the closests points from a csv files,
     the LD, LS and SSD values.
     """
+    lon = float(request.GET['lon'])
+    lat = float(request.GET['lat'])
+    year = request.GET['year']
+    state = request.GET['state']
+    returnPeriod = request.GET['returnPeriod']
+    model = request.GET['model']
+    csv_base_path = os.path.join(App.get_app_workspace().path, model, year)
 
-    result = {}
-    dist11 = 10000
-    dist12 = 10000
-    dist21 = 10000
-    dist22 = 10000
-    # dist will contain the 2 closests distances from the coordinate put in.
-    # LS files
-    # Quadrant 1: dist [0,1]
-    # Quadrant 2: dist [2,3]
-    # Quadrant 3: dist [4,5]
-    # Quadrant 4: dist [6,7]
-    dist = [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000]
-    # quad_line_tracker will contain the values of the point closest to the
-    # cooridnates put in.
-    quad_line_tracker = [0, 0, 0, 0, 0, 0, 0, 0]
-    # temp_numerator is a temporary variable for calculations
-    temp_numerator = 1
-    # point_value will contain the calculated variables that will be
-    # brought to the js file.
-    point_value = []
-    try:
-        lon = float(request.GET['lon'])
-        lat = float(request.GET['lat'])
-        year = request.GET['year']
-        state = request.GET['state']
-        returnPeriod = request.GET['returnPeriod']
-        model = request.GET['model']
+    if model == 'cpt':
+        point = Point(float(lon), float(lat))
 
-        csv_base_path = os.path.join(App.get_app_workspace().path, model)
+        # get CSR from the BI_LT_returnperiod csvs
+        csv = os.path.join(csv_base_path, f'BI_LT-{returnPeriod}', f'BI_LT_{returnPeriod}_{state}.csv')
+        df = pd.read_csv(csv)
+        # determine the closest point
+        points_df = df.loc[:, "Longitude":"Latitude"].apply(Point, axis=1)
+        nearest_pt = nearest_points(point, MultiPoint(points_df.tolist()))
+        closest_rows = df.loc[(df['Longitude'] == nearest_pt[1].x) & (df['Latitude'] == nearest_pt[1].y)]
+        csr = closest_rows['CSR'].values[0]
+
+        # get Qreq from the KU_LT_returnperiod csv files
+        csv = os.path.join(csv_base_path, f'KU_LT-{returnPeriod}', f'KU_LT_{returnPeriod}_{state}.csv')
+        df = pd.read_csv(csv)
+        # determine the closest point
+        points_df = df.loc[:, "Longitude":"Latitude"].apply(Point, axis=1)
+        nearest_pt = nearest_points(point, MultiPoint(points_df.tolist()))
+        closest_rows = df.loc[(df['Longitude'] == nearest_pt[1].x) & (df['Latitude'] == nearest_pt[1].y)]
+        qreq = closest_rows['Qreq'].values[0]
+
+        # get Ev_ku and Ev_bi from the KU_LT_returnperiod csv files
+        csv = os.path.join(csv_base_path, f'LS-{returnPeriod}', f'LS_{returnPeriod}_{state}.csv')
+        df = pd.read_csv(csv)
+        # determine the closest point
+        points_df = df.loc[:, "Longitude":"Latitude"].apply(Point, axis=1)
+        nearest_pt = nearest_points(point, MultiPoint(points_df.tolist()))
+        closest_rows = df.loc[(df['Longitude'] == nearest_pt[1].x) & (df['Latitude'] == nearest_pt[1].y)]
+        ku_strain_ref = closest_rows['Ku Strain (%)'].values[0]
+        bi_strain_ref = closest_rows['B&I Strain (%)'].values[0]
+
+        # get Ev_ku_max and Ev_bi_max from the KU_LT_returnperiod csv files
+        csv = os.path.join(csv_base_path, f'Set-{returnPeriod}', f'Set_{returnPeriod}_{state}.csv')
+        df = pd.read_csv(csv)
+        # determine the closest point
+        points_df = df.loc[:, "Longitude":"Latitude"].apply(Point, axis=1)
+        nearest_pt = nearest_points(point, MultiPoint(points_df.tolist()))
+        closest_rows = df.loc[(df['Longitude'] == nearest_pt[1].x) & (df['Latitude'] == nearest_pt[1].y)]
+        ku_strain_max = closest_rows['Ku Strain (%)'].values[0]
+        bi_strain_max = closest_rows['B&I Strain (%)'].values[0]
+
+        return JsonResponse({'point_value': [csr, qreq, ku_strain_ref, bi_strain_ref, ku_strain_max, bi_strain_max]})
+
+    elif model == 'spt':
+        result = {}
+        dist11 = 10000
+        dist12 = 10000
+        dist21 = 10000
+        dist22 = 10000
+        # dist will contain the 2 closest distances from the coordinate put in.
+        # LS files
+        # Quadrant 1: dist [0,1]
+        # Quadrant 2: dist [2,3]
+        # Quadrant 3: dist [4,5]
+        # Quadrant 4: dist [6,7]
+        dist = [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000]
+        # quad_line_tracker will contain the values of the point closest to the
+        # cooridnates put in.
+        quad_line_tracker = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        # temp_numerator is a temporary variable for calculations
+        temp_numerator = 1
+
+        # point_value will contain the calculated variables which will be returned as json
+        point_value = []
 
         # path extentions
         LS_path = "LS-" + returnPeriod + '/LS-' + returnPeriod + '_' + state + '.csv'
         LT_path = "LT-" + returnPeriod + '/LT-' + returnPeriod + '_' + state + '.csv'
         SSD_path = "SSD-" + returnPeriod + '/SSD-' + returnPeriod + '_' + state + '.csv'
         path_extension = [LS_path, LT_path, SSD_path]
-
         print(csv_base_path)
 
         # This loops through the extensions, gets the right files and calculates.
         for extension in path_extension:
-            csv_file_path = os.path.join(csv_base_path, year, extension)
+            csv_file_path = os.path.join(csv_base_path, extension)
             ext = str(extension)
             print(csv_file_path)
             # This checks if file exists
@@ -236,14 +274,6 @@ def query_csv(request):
                         for i in range(8):
                             if dist[i] == 10000:
                                 continue
-                                # if((state == "Connecticut" and year == "2014") or (state == "connecticut" and year == "2014")):
-                                if year == "2014":
-                                    temp_numerator_add = float(quad_line_tracker[i][3]) / float(
-                                        math.pow(dist[i], 2))
-                                    temp_numerator = temp_numerator + temp_numerator_add
-                                    temp_denominator_add = 1 / float(math.pow(dist[i], 2))
-                                    temp_denominator = temp_denominator + temp_denominator_add
-                                    LS_Dm_IDW = temp_numerator / temp_denominator
                             else:
                                 temp_numerator_add = float(quad_line_tracker[i][2]) / float(math.pow(dist[i], 2))
                                 temp_numerator = temp_numerator + temp_numerator_add
@@ -337,8 +367,4 @@ def query_csv(request):
 
         result["status"] = "success"
         result["point_value"] = point_value
-    except Exception as e:
-        print(e)
-        result["status"] = "error"
-    finally:
         return JsonResponse(result)

@@ -1,19 +1,19 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 
 
-class LiquefactionHazardApp(TethysAppBase):
+class Lfhazard(TethysAppBase):
     """
-    Tethys app class for Liquefaction Hazard App.
+    Tethys app class for Liquefaction Hazard Lookup.
     """
 
-    name = 'Liquefaction Hazard App'
+    name = 'Liquefaction Hazard Parameter Lookup'
     index = 'lfhazard:home'
     icon = 'lfhazard/images/icon.gif'
     package = 'lfhazard'
     root_url = 'lfhazard'
     color = '#915F6D'
-    description = '"Liquefaction Hazard Lookup"'
-    tags = '"Liquifaction", "Geotech"'
+    description = ''
+    tags = ''
     enable_feedback = False
     feedback_emails = []
 
@@ -26,17 +26,17 @@ class LiquefactionHazardApp(TethysAppBase):
         return (
             urlmap(
                 name='home',
-                url='lfhazard/',
+                url=f'{self.root_url}/',
                 controller='lfhazard.controllers.home'
             ),
             urlmap(
                 name='getgeojson',
-                url='lfhazard/getgeojson',
+                url=f'{self.root_url}/getgeojson',
                 controller='lfhazard.controllers.get_geojson'
             ),
             urlmap(
                 name='querycsv',
-                url='lfhazard/querycsv',
+                url=f'{self.root_url}/querycsv',
                 controller='lfhazard.controllers.query_csv'
             ),
         )

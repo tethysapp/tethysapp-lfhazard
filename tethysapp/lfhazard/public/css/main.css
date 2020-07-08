@@ -17,6 +17,9 @@ html, body, #app-content, #inner-app-content, #outer-container, #map {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
+    overflow-x: auto;
+    overflow-y: scroll;
+    height: 50%;
 }
 
 .lftable td, .lftable th {

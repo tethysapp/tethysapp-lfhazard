@@ -40,7 +40,6 @@ var point_value;
 var row_counter = 0;
 
 function update() {
-    // console.log("hello");
     var returnPeriod = $('#select_return_period').val();
     var state = $('#select_state').val();
     var modelYear = document.getElementById('select_year').value;

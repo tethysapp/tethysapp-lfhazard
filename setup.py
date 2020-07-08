@@ -13,16 +13,17 @@ resource_files = find_resource_files('tethysapp/' + app_package + '/templates', 
 resource_files += find_resource_files('tethysapp/' + app_package + '/public', 'tethysapp/' + app_package)
 resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces', 'tethysapp/' + app_package)
 
+
 setup(
     name=release_package,
-    version='0.3',
-    description='Liquefaction Hazard Lookup',
+    version='0.0.1',
+    description='',
     long_description='',
     keywords='',
-    author='Riley Hales, Kevin Liang, Tylor Bayer',
+    author='',
     author_email='',
     url='',
-    license='MIT',
+    license='',
     packages=find_namespace_packages(),
     package_data={'': resource_files},
     include_package_data=True,
